@@ -3,6 +3,7 @@ from django.shortcuts import reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
 
+from .models import Order
 from .models import Product
 from .models import ProductCategory
 from .models import Restaurant
@@ -104,3 +105,17 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(ProductCategory)
 class ProductAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = [
+        'phonenumber',
+        'firstname',
+        'lastname',
+        'address',
+    ]
+    list_display_links = [
+        'phonenumber',
+    ]
+
