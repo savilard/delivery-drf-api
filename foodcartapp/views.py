@@ -1,9 +1,11 @@
 from django.http import JsonResponse
 from django.templatetags.static import static
+from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import Product
+from .serializers import OrderSerializer
 from .services import save_order_to_db
 
 
@@ -59,6 +61,7 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-    save_order_to_db(request.data)
-    print(request.data)
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    save_order_to_db(serializer.validated_data)
     return JsonResponse({}, )

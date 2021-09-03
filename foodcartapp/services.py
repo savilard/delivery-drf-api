@@ -11,11 +11,6 @@ def save_order_to_db(validated_data):
     )
     order.save()
 
-    OrderProduct.objects.bulk_create(
-        [
-            OrderProduct(order=order, product=Product.objects.get(id=fields['product']), quantity=fields['quantity'])
-            for fields in validated_data['products']
-        ]
-    )
+    OrderProduct.objects.bulk_create([OrderProduct(order=order, **fields) for fields in validated_data['products']])
 
     return order
