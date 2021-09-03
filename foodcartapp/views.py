@@ -5,6 +5,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from .models import Product
+from .serializers import OrderSerializer
 from .services import save_order_to_db
 
 
@@ -60,42 +61,7 @@ def product_list_api(request):
 
 @api_view(['POST'])
 def register_order(request):
-    order_content = request.data
-
-    required_fields = ['products', 'firstname', 'lastname', 'phonenumber', 'address']
-    missing_fields = [field for field in required_fields if field not in order_content]
-    if missing_fields:
-        return Response(
-            {'error': '{}: Обязательное поле'.format(', '.join(missing_fields))},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    for key, value in order_content.items():
-
-        if value is None or value == "":
-            return Response(
-                {'error': f'{key}: Это поле не может быть пустым'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if not isinstance(value, str) and key != 'products':
-            return Response(
-                {'error': f'{key}: Not a valid string'},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-    products = order_content.get('products')
-
-    if isinstance(products, str):
-        return Response(
-            {'error': 'products: Ожидался list со значениями, но был получен "str"'},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-    elif isinstance(products, list) and not products:
-        return Response(
-            {'error': 'products: Этот список не может быть пустым'},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    save_order_to_db(request.data)
+    serializer = OrderSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    save_order_to_db(serializer.validated_data)
     return JsonResponse({}, )
