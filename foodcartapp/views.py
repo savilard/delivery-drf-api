@@ -62,22 +62,33 @@ def product_list_api(request):
 def register_order(request):
     order_content = request.data
 
-    try:
-        products = order_content['products']
-    except KeyError:
+    required_fields = ['products', 'firstname', 'lastname', 'phonenumber', 'address']
+    missing_fields = [field for field in required_fields if field not in order_content]
+    if missing_fields:
         return Response(
-            {'error': 'products: Обязательное поле'},
+            {'error': '{}: Обязательное поле'.format(', '.join(missing_fields))},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+    for key, value in order_content.items():
+
+        if value is None or value == "":
+            return Response(
+                {'error': f'{key}: Это поле не может быть пустым'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not isinstance(value, str) and key != 'products':
+            return Response(
+                {'error': f'{key}: Not a valid string'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+    products = order_content.get('products')
 
     if isinstance(products, str):
         return Response(
             {'error': 'products: Ожидался list со значениями, но был получен "str"'},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-    elif products is None:
-        return Response(
-            {'error': 'products: Это поле не может быть пустым'},
             status=status.HTTP_400_BAD_REQUEST,
         )
     elif isinstance(products, list) and not products:

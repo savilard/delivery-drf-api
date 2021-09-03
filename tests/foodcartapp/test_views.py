@@ -25,6 +25,25 @@ from foodcartapp.models import Order
         (
             {"firstname": "Иван", "lastname": "Петров", "phonenumber": "+79291000000", "address": "Москва"},
             'products: Обязательное поле',
+        ),
+        (
+            {"products": [{"product": 1, "quantity": 1}], "firstname": None, "lastname": "Петров",
+             "phonenumber": "+79291000000", "address": "Москва"},
+            'firstname: Это поле не может быть пустым',
+        ),
+        (
+            {"products": [{"product": 1, "quantity": 1}], "firstname": [], "lastname": "Петров",
+             "phonenumber": "+79291000000", "address": "Москва"},
+            'firstname: Not a valid string',
+        ),
+        (
+            {"products": [{"product": 1, "quantity": 1}], "firstname": "Тимур", "lastname": "Иванов", "phonenumber": "",
+             "address": "Москва, Новый Арбат 10"},
+            'phonenumber: Это поле не может быть пустым',
+        ),
+        (
+            {"products": [{"product": 1, "quantity": 1}]},
+            'firstname, lastname, phonenumber, address: Обязательное поле',
         )
     ]
 )
