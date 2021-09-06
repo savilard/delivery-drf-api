@@ -114,12 +114,14 @@ class OrderProductInLine(admin.TabularInline):
     fields = [
         'product',
         'quantity',
+        'cost',
     ]
 
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = [
+        'id',
         'phonenumber',
         'firstname',
         'lastname',
