@@ -1,4 +1,4 @@
-from foodcartapp.models import Order, OrderProduct, Product
+from foodcartapp.models import Order, OrderProduct
 
 
 def save_order_to_db(validated_data):
@@ -11,6 +11,16 @@ def save_order_to_db(validated_data):
     )
     order.save()
 
-    OrderProduct.objects.bulk_create([OrderProduct(order=order, **fields) for fields in validated_data['products']])
+    validated_products = validated_data['products']
+
+    OrderProduct.objects.bulk_create(
+        [
+            OrderProduct(
+                order=order,
+                cost=validated_product['quantity'] * validated_product['product'].price,
+                **validated_product,
+            )
+            for validated_product in validated_products]
+    )
 
     return order
