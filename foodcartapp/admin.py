@@ -1,8 +1,11 @@
 from django.contrib import admin
+from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
+from django.utils.http import url_has_allowed_host_and_scheme
 
+from star_burger import settings
 from .models import Order, OrderProduct
 from .models import Product
 from .models import ProductCategory
@@ -92,13 +95,16 @@ class ProductAdmin(admin.ModelAdmin):
         if not obj.image:
             return 'выберите картинку'
         return format_html('<img src="{url}" style="max-height: 200px;"/>', url=obj.image.url)
+
     get_image_preview.short_description = 'превью'
 
     def get_image_list_preview(self, obj):
         if not obj.image or not obj.id:
             return 'нет картинки'
         edit_url = reverse('admin:foodcartapp_product_change', args=(obj.id,))
-        return format_html('<a href="{edit_url}"><img src="{src}" style="max-height: 50px;"/></a>', edit_url=edit_url, src=obj.image.url)
+        return format_html('<a href="{edit_url}"><img src="{src}" style="max-height: 50px;"/></a>', edit_url=edit_url,
+                           src=obj.image.url)
+
     get_image_list_preview.short_description = 'превью'
 
 
@@ -131,3 +137,16 @@ class OrderAdmin(admin.ModelAdmin):
         'phonenumber',
     ]
     inlines = [OrderProductInLine]
+
+    def response_change(self, request, obj):
+        response = super(OrderAdmin, self).response_change(request, obj)
+        url = request.GET['next']
+        is_url_safe = url_has_allowed_host_and_scheme(
+            url=request.GET['next'],
+            allowed_hosts=settings.ALLOWED_HOSTS,
+        )
+
+        if "next" in request.GET and is_url_safe:
+            return HttpResponseRedirect(url)
+        else:
+            return response
