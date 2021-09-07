@@ -18,6 +18,7 @@ def serialize_order(order: Order):
         'lastname': order.lastname,
         'phonenumber': order.phonenumber,
         'address': order.address,
+        'comment': order.comment,
     }
 
 
