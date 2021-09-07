@@ -1,14 +1,24 @@
 from django import forms
-from django.shortcuts import redirect, render
-from django.views import View
-from django.urls import reverse_lazy
-from django.contrib.auth.decorators import user_passes_test
-
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import user_passes_test
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.views import View
+
+from foodcartapp.models import Product, Restaurant, Order
 
 
-from foodcartapp.models import Product, Restaurant, Order, OrderProduct
+def serialize_order(order: Order):
+    return {
+        'id': order.id,
+        'status': order.get_status_display,
+        'order_amount': order.order_amount,
+        'firstname': order.firstname,
+        'lastname': order.lastname,
+        'phonenumber': order.phonenumber,
+        'address': order.address,
+    }
 
 
 class Login(forms.Form):
@@ -71,7 +81,6 @@ def view_products(request):
     default_availability = {restaurant.id: False for restaurant in restaurants}
     products_with_restaurants = []
     for product in products:
-
         availability = {
             **default_availability,
             **{item.restaurant_id: item.availability for item in product.menu_items.all()},
@@ -99,5 +108,5 @@ def view_restaurants(request):
 def view_orders(request):
     orders = Order.objects.prefetch_related('order_products').calculate_order_amount()
     return render(request, template_name='order_items.html', context={
-        'order_items': orders,
+        'order_items': [serialize_order(order) for order in orders],
     })
