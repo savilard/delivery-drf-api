@@ -135,10 +135,18 @@ class OrderQuerySet(models.QuerySet):
 
 
 class Order(models.Model):
+    PROCESSED = 'processed'
+    UNPROCESSED = 'unprocessed'
+    ORDER_STATUS_CHOICES = [
+        (PROCESSED, 'Обработанный'),
+        (UNPROCESSED, 'Необработанный'),
+    ]
+
     firstname = models.CharField('Имя', max_length=20)
     lastname = models.CharField('Фамилия', max_length=20)
     phonenumber = PhoneNumberField('Номер телефона', max_length=15, db_index=True)
     address = models.CharField('Адрес доставки', max_length=200, db_index=True)
+    status = models.CharField('Статус', choices=ORDER_STATUS_CHOICES, default=UNPROCESSED, max_length=11)
 
     objects = OrderQuerySet.as_manager()
 
