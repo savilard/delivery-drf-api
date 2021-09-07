@@ -140,13 +140,17 @@ class OrderAdmin(admin.ModelAdmin):
 
     def response_change(self, request, obj):
         response = super(OrderAdmin, self).response_change(request, obj)
-        url = request.GET['next']
+
+        redirect_url = request.GET.get('next')
+        if not redirect_url:
+            return response
+
         is_url_safe = url_has_allowed_host_and_scheme(
-            url=request.GET['next'],
+            url=redirect_url,
             allowed_hosts=settings.ALLOWED_HOSTS,
         )
 
         if "next" in request.GET and is_url_safe:
-            return HttpResponseRedirect(url)
+            return HttpResponseRedirect(redirect_url)
         else:
             return response
