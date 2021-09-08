@@ -13,6 +13,7 @@ def serialize_order(order: Order):
     return {
         'id': order.id,
         'status': order.get_status_display,
+        'payment_method': order.get_payment_method_display,
         'order_amount': order.order_amount,
         'firstname': order.firstname,
         'lastname': order.lastname,

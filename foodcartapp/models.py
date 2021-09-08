@@ -143,6 +143,13 @@ class Order(models.Model):
         (UNPROCESSED, 'Необработанный'),
     ]
 
+    CASH = 'cash'
+    CARD = 'card'
+    PAYMENT_METHOD_CHOICES = [
+        (CASH, 'Наличные'),
+        (CARD, 'Карта'),
+    ]
+
     firstname = models.CharField('Имя', max_length=20)
     lastname = models.CharField('Фамилия', max_length=20)
     phonenumber = PhoneNumberField('Номер телефона', max_length=15, db_index=True)
@@ -152,6 +159,7 @@ class Order(models.Model):
     registrated_at = models.DateTimeField('Дата регистрации', default=timezone.now)
     called_at = models.DateTimeField('Дата звонка', null=True, blank=True)
     delivered_at = models.DateTimeField('Дата доставки', null=True, blank=True)
+    payment_method = models.CharField('Способ оплаты', choices=PAYMENT_METHOD_CHOICES, default=CASH, max_length=4)
 
     objects = OrderQuerySet.as_manager()
 
