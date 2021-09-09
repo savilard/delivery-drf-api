@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from django.views import View
 
 from foodcartapp.models import Product, Restaurant, Order
+from foodcartapp.selectors import get_restaurants_with_products_from_order
 
 
 def serialize_order(order: Order):
@@ -20,6 +21,7 @@ def serialize_order(order: Order):
         'phonenumber': order.phonenumber,
         'address': order.address,
         'comment': order.comment,
+        'restaurants': get_restaurants_with_products_from_order(order),
     }
 
 
@@ -108,7 +110,7 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    orders = Order.objects.prefetch_related('order_products').calculate_order_amount()
+    orders = Order.objects.prefetch_related('order_products__product__menu_items__restaurant').calculate_order_amount()
     return render(request, template_name='order_items.html', context={
         'order_items': [serialize_order(order) for order in orders],
     })
