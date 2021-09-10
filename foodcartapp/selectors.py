@@ -1,8 +1,9 @@
+from typing import List
+
 from foodcartapp.models import Order, RestaurantMenuItem
 
 
-def get_restaurants_with_products_from_order(order: Order):
-    products_in_restaurants = RestaurantMenuItem.objects.select_related('restaurant', 'product')
+def get_restaurants_with_products_from_order(order: Order, products_in_restaurants: List[RestaurantMenuItem]):
 
     order_products = order.order_products.all()
     restaurants_with_products_from_order = []
