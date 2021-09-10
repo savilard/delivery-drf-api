@@ -113,7 +113,8 @@ def view_restaurants(request):
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
     orders = Order.objects.prefetch_related('order_products__product').calculate_order_amount()
-    products_in_restaurants = RestaurantMenuItem.objects.select_related('restaurant', 'product')
+    products_in_restaurants = RestaurantMenuItem.objects.select_related('restaurant', 'product') \
+        .filter(availability=True)
     return render(request, template_name='order_items.html', context={
         'order_items': [serialize_order(order, products_in_restaurants) for order in orders],
     })
