@@ -2,8 +2,9 @@ from typing import List
 
 from geopy import distance
 
-from foodcartapp.location import fetch_coordinates
+# from foodcartapp.location import fetch_coordinates
 from foodcartapp.models import Order, RestaurantMenuItem
+from location.models import Location
 from star_burger import settings
 
 
@@ -26,11 +27,11 @@ def get_restaurants_with_products_from_order(order: Order, products_in_restauran
     )
 
 
-def calculate_distances_to_order(restaurants, ya_geocoder_api_key: str, order_address: str):
-    order_lon, order_lat = fetch_coordinates(apikey=ya_geocoder_api_key, place=order_address)
+def calculate_distances_to_order(restaurants, order_address: str):
+    order_lon, order_lat = Location.fetch_coordinates(order_address)
     restaurants_with_order_distance = []
     for restaurant in restaurants:
-        restaurant_lon, restaurant_lat = fetch_coordinates(apikey=ya_geocoder_api_key, place=restaurant.address)
+        restaurant_lon, restaurant_lat = Location.fetch_coordinates(restaurant.address)
         distance_between_restoraunt_and_order = distance.distance(
             (order_lat, order_lon), (restaurant_lat, restaurant_lon),
         ).km
