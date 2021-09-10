@@ -1,3 +1,5 @@
+from typing import List
+
 from django import forms
 from django.contrib.auth import authenticate, login
 from django.contrib.auth import views as auth_views
@@ -6,11 +8,11 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 
-from foodcartapp.models import Product, Restaurant, Order
+from foodcartapp.models import Order, Product, Restaurant, RestaurantMenuItem
 from foodcartapp.selectors import get_restaurants_with_products_from_order
 
 
-def serialize_order(order: Order):
+def serialize_order(order: Order, products_in_restaurants: List[RestaurantMenuItem]):
     return {
         'id': order.id,
         'status': order.get_status_display,
@@ -21,7 +23,7 @@ def serialize_order(order: Order):
         'phonenumber': order.phonenumber,
         'address': order.address,
         'comment': order.comment,
-        'restaurants': get_restaurants_with_products_from_order(order),
+        'restaurants': get_restaurants_with_products_from_order(order, products_in_restaurants),
     }
 
 
@@ -110,7 +112,8 @@ def view_restaurants(request):
 
 @user_passes_test(is_manager, login_url='restaurateur:login')
 def view_orders(request):
-    orders = Order.objects.prefetch_related('order_products__product__menu_items__restaurant').calculate_order_amount()
+    orders = Order.objects.prefetch_related('order_products__product').calculate_order_amount()
+    products_in_restaurants = RestaurantMenuItem.objects.select_related('restaurant', 'product')
     return render(request, template_name='order_items.html', context={
-        'order_items': [serialize_order(order) for order in orders],
+        'order_items': [serialize_order(order, products_in_restaurants) for order in orders],
     })
