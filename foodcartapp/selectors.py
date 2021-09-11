@@ -2,10 +2,8 @@ from typing import List
 
 from geopy import distance
 
-# from foodcartapp.location import fetch_coordinates
 from foodcartapp.models import Order, RestaurantMenuItem
 from location.models import Location
-from star_burger import settings
 
 
 def get_restaurants_with_products_from_order(order: Order, products_in_restaurants: List[RestaurantMenuItem]):
@@ -20,25 +18,38 @@ def get_restaurants_with_products_from_order(order: Order, products_in_restauran
                 if product_in_restaurants.product == order_product.product
             ]
         )
+
     return calculate_distances_to_order(
         restaurants=set.intersection(*map(set, restaurants_with_products_from_order)),
-        ya_geocoder_api_key=settings.YANDEX_GEOCODER_APIKEY,
         order_address=order.address,
     )
 
 
+def get_location(address: str):
+    location, is_created = Location.objects.get_or_create(address=address)
+    if not is_created:
+        return location
+
+    lon, lat = Location.fetch_coordinates(address)
+    location.lat = lat
+    location.lon = lon
+    location.save()
+    return location
+
+
 def calculate_distances_to_order(restaurants, order_address: str):
-    order_lon, order_lat = Location.fetch_coordinates(order_address)
+    order_location = get_location(order_address)
+
     restaurants_with_order_distance = []
     for restaurant in restaurants:
-        restaurant_lon, restaurant_lat = Location.fetch_coordinates(restaurant.address)
-        distance_between_restoraunt_and_order = distance.distance(
-            (order_lat, order_lon), (restaurant_lat, restaurant_lon),
+        restaurant_location = get_location(restaurant.address)
+        distance_between_restaurant_and_order = distance.distance(
+            (order_location.lat, order_location.lon), (restaurant_location.lat, restaurant_location.lon),
         ).km
         restaurants_with_order_distance.append(
             {
                 'restaurant': restaurant,
-                'order_distance': round(distance_between_restoraunt_and_order, 2),
+                'order_distance': round(distance_between_restaurant_and_order, 2),
             }
         )
     return sorted(restaurants_with_order_distance, key=lambda restaurant: restaurant['order_distance'])

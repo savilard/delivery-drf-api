@@ -115,7 +115,10 @@ def view_orders(request):
         .filter(availability=True)
     return render(request, template_name='order_items.html', context={
         'order_items': [
-            serialize_order(order, get_restaurants_with_products_from_order(order, products_in_restaurants))
+            serialize_order(order, get_restaurants_with_products_from_order(
+                order,
+                products_in_restaurants,
+            ))
             for order in orders
         ],
     })
