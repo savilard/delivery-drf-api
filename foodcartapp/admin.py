@@ -5,6 +5,7 @@ from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme
 
+from location.models import Location
 from star_burger import settings
 from .models import Order, OrderProduct
 from .models import Product
@@ -154,3 +155,9 @@ class OrderAdmin(admin.ModelAdmin):
             return HttpResponseRedirect(redirect_url)
         else:
             return response
+
+    def save_model(self, request, obj, form, change):
+        address = obj.address
+        lon, lat = Location.fetch_coordinates(address)
+        Location.objects.get_or_create(address=address, lat=lat, lon=lon)
+        super().save_model(request, obj, form, change)
