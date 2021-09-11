@@ -6,7 +6,9 @@ from foodcartapp.models import Order, RestaurantMenuItem
 from location.models import Location
 
 
-def get_restaurants_with_products_from_order(order: Order, products_in_restaurants: List[RestaurantMenuItem]):
+def get_restaurants_with_products_from_order(
+    order: Order, products_in_restaurants: List[RestaurantMenuItem], locations,
+):
     order_products = order.order_products.all()
     restaurants_with_products_from_order = []
 
@@ -22,29 +24,33 @@ def get_restaurants_with_products_from_order(order: Order, products_in_restauran
     return calculate_distances_to_order(
         restaurants=set.intersection(*map(set, restaurants_with_products_from_order)),
         order_address=order.address,
+        locations=locations,
     )
 
 
-def get_location(address: str):
-    location, is_created = Location.objects.get_or_create(address=address)
-    if not is_created:
-        return location
+def get_location_coords(address: str, locations):
+    for location in locations:
+        if location['address'] == address:
+            return location['lat'], location['lon']
 
     lon, lat = Location.fetch_coordinates(address)
-    location.lat = lat
-    location.lon = lon
-    location.save()
-    return location
+    location, is_created = Location.objects.get_or_create(
+        address=address,
+        lat=lat,
+        lon=lon,
+    )
+    return location.lat, location.lon
 
 
-def calculate_distances_to_order(restaurants, order_address: str):
-    order_location = get_location(order_address)
+def calculate_distances_to_order(restaurants, order_address: str, locations):
+    order_lat, order_lon = get_location_coords(order_address, locations)
 
     restaurants_with_order_distance = []
+
     for restaurant in restaurants:
-        restaurant_location = get_location(restaurant.address)
+        restaurant_lat, restaurant_lon = get_location_coords(restaurant.address, locations)
         distance_between_restaurant_and_order = distance.distance(
-            (order_location.lat, order_location.lon), (restaurant_location.lat, restaurant_location.lon),
+            (order_lat, order_lon), (restaurant_lat, restaurant_lon),
         ).km
         restaurants_with_order_distance.append(
             {

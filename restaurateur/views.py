@@ -8,6 +8,7 @@ from django.views import View
 
 from foodcartapp.models import Order, Product, Restaurant, RestaurantMenuItem
 from foodcartapp.selectors import get_restaurants_with_products_from_order
+from location.models import Location
 
 
 def serialize_order(order: Order, restaurants):
@@ -113,11 +114,14 @@ def view_orders(request):
     orders = Order.objects.prefetch_related('order_products__product').calculate_order_amount()
     products_in_restaurants = RestaurantMenuItem.objects.select_related('restaurant', 'product') \
         .filter(availability=True)
+    locations = Location.objects.all().values()
+
     return render(request, template_name='order_items.html', context={
         'order_items': [
             serialize_order(order, get_restaurants_with_products_from_order(
                 order,
                 products_in_restaurants,
+                locations,
             ))
             for order in orders
         ],
