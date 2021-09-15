@@ -154,12 +154,24 @@ class Order(models.Model):
     lastname = models.CharField('Фамилия', max_length=20)
     phonenumber = PhoneNumberField('Номер телефона', max_length=15, db_index=True)
     address = models.CharField('Адрес доставки', max_length=200, db_index=True)
-    status = models.CharField('Статус', choices=ORDER_STATUS_CHOICES, default=UNPROCESSED, max_length=11)
+    status = models.CharField(
+        'Статус',
+        choices=ORDER_STATUS_CHOICES,
+        default=UNPROCESSED,
+        max_length=11,
+        db_index=True,
+    )
     comment = models.TextField('Комментарий', max_length=200, blank=True)
-    registrated_at = models.DateTimeField('Дата регистрации', default=timezone.now)
-    called_at = models.DateTimeField('Дата звонка', null=True, blank=True)
-    delivered_at = models.DateTimeField('Дата доставки', null=True, blank=True)
-    payment_method = models.CharField('Способ оплаты', choices=PAYMENT_METHOD_CHOICES, default=CASH, max_length=4)
+    registrated_at = models.DateTimeField('Дата регистрации', default=timezone.now, db_index=True)
+    called_at = models.DateTimeField('Дата звонка', null=True, blank=True, db_index=True)
+    delivered_at = models.DateTimeField('Дата доставки', null=True, blank=True, db_index=True)
+    payment_method = models.CharField(
+        'Способ оплаты',
+        choices=PAYMENT_METHOD_CHOICES,
+        default=CASH,
+        max_length=4,
+        db_index=True,
+    )
 
     restaurant = models.ForeignKey(
         Restaurant,
