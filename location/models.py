@@ -4,7 +4,7 @@ import requests
 from django.db import models
 from django.utils import timezone
 
-from star_burger import settings
+from django.conf import settings
 
 
 class Location(models.Model):
