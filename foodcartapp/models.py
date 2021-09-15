@@ -212,8 +212,6 @@ class OrderProduct(models.Model):
         'Стоимость',
         max_digits=8,
         decimal_places=2,
-        null=True,
-        blank=True,
         validators=[MinValueValidator(0)],
     )
 
