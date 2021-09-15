@@ -7,11 +7,19 @@ from django.utils import timezone
 from django.conf import settings
 
 
+class LocationManager(models.Manager):
+
+    def to_dict(self):
+        return {location.address: (location.lat, location.lon) for location in self.all()}
+
+
 class Location(models.Model):
     address = models.CharField('Адрес', max_length=150, unique=True)
     lat = models.FloatField('Широта', blank=True, null=True)
     lon = models.FloatField('Долгота', blank=True, null=True)
     created_at = models.DateTimeField('Дата создания', default=timezone.now)
+
+    objects = LocationManager()
 
     class Meta:
         verbose_name = 'локация'

@@ -29,17 +29,16 @@ def get_restaurants_with_products_from_order(
 
 
 def get_location_coords(address: str, locations):
-    for location in locations:
-        if location['address'] == address:
-            return location['lat'], location['lon']
-
-    lon, lat = Location.fetch_coordinates(address)
-    location, is_created = Location.objects.get_or_create(
-        address=address,
-        lat=lat,
-        lon=lon,
-    )
-    return location.lat, location.lon
+    coords = locations.get(address, False)
+    if not coords:
+        lon, lat = Location.fetch_coordinates(address)
+        location, is_created = Location.objects.get_or_create(
+            address=address,
+            lat=lat,
+            lon=lon,
+        )
+        return location.lat, location.lon
+    return coords
 
 
 def calculate_distances_to_order(restaurants, order_address: str, locations):
