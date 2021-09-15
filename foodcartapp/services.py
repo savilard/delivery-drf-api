@@ -9,7 +9,6 @@ def save_order_to_db(validated_data):
         phonenumber=validated_data['phonenumber'],
         address=validated_data['address'],
     )
-    order.save()
 
     validated_products = validated_data['products']
 
