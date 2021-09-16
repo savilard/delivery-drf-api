@@ -145,9 +145,11 @@ class Order(models.Model):
 
     CASH = 'cash'
     CARD = 'card'
+    NOT_SELECTED = 'not_selected'
     PAYMENT_METHOD_CHOICES = [
         (CASH, 'Наличные'),
         (CARD, 'Карта'),
+        (NOT_SELECTED, 'Не выбрано'),
     ]
 
     firstname = models.CharField('Имя', max_length=20)
@@ -168,8 +170,8 @@ class Order(models.Model):
     payment_method = models.CharField(
         'Способ оплаты',
         choices=PAYMENT_METHOD_CHOICES,
-        default=CASH,
-        max_length=4,
+        default=NOT_SELECTED,
+        max_length=12,
         db_index=True,
     )
 
