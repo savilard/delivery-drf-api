@@ -15,7 +15,7 @@ class LocationCoords:
 
 class LocationManager(models.Manager):
 
-    def to_dict(self):
+    def get_addresses_and_their_coordinates(self):
         return {
             location.address: LocationCoords(lat=location.lat, lon=location.lon)
             for location in self.all()

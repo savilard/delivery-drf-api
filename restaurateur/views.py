@@ -116,7 +116,7 @@ def view_orders(request):
         'restaurant',
         'product',
     ).filter(availability=True)
-    locations = Location.objects.to_dict()
+    locations = Location.objects.get_addresses_and_their_coordinates()
 
     return render(request, template_name='order_items.html', context={
         'order_items': [
