@@ -116,14 +116,14 @@ def view_orders(request):
         'restaurant',
         'product',
     ).filter(availability=True)
-    locations = Location.objects.to_dict()
+    location_addresses = Location.objects.get_addresses_and_their_coordinates()
 
     return render(request, template_name='order_items.html', context={
         'order_items': [
             serialize_order(order, get_restaurants_with_products_from_order(
                 order,
                 products_in_restaurants,
-                locations,
+                location_addresses,
             ))
             for order in orders
         ],
