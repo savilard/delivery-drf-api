@@ -1,16 +1,25 @@
-from typing import Tuple
+from dataclasses import dataclass
+from typing import Optional
 
 import requests
+from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
-from django.conf import settings
+
+@dataclass
+class LocationCoords:
+    lat: float
+    lon: float
 
 
 class LocationManager(models.Manager):
 
     def to_dict(self):
-        return {location.address: (location.lat, location.lon) for location in self.all()}
+        return {
+            location.address: (LocationCoords(lat=location.lat, lon=location.lon))
+            for location in self.all()
+        }
 
 
 class Location(models.Model):
@@ -29,13 +38,13 @@ class Location(models.Model):
         return self.address
 
     @staticmethod
-    def fetch_coordinates(place) -> Tuple[float]:
+    def fetch_coordinates(place) -> Optional[LocationCoords]:
         """Gets the coordinates of the place using Yandex Geocoder Api.
         Args:
             apikey (str): apikey of Yandex Geocoder Api
             place (srt): name of the place
         Returns:
-            tuple: longitude and latitude of the place in the format (lon, lat)
+            LocationCoords: longitude and latitude of the place
         """
         base_url = 'https://geocode-maps.yandex.ru/1.x'
         payload = {
@@ -46,5 +55,7 @@ class Location(models.Model):
         response = requests.get(base_url, params=payload)
         response.raise_for_status()
         places_found = response.json()['response']['GeoObjectCollection']['featureMember']
-        most_relevant = places_found[0]
-        return most_relevant['GeoObject']['Point']['pos'].split(' ')
+        if not places_found:
+            return None
+        lon, lat = places_found[0]['GeoObject']['Point']['pos'].split(' ')
+        return LocationCoords(lat=lat, lon=lon)

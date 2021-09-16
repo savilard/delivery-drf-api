@@ -158,6 +158,9 @@ class OrderAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         address = obj.address
-        lon, lat = Location.fetch_coordinates(address)
-        Location.objects.get_or_create(address=address, lat=lat, lon=lon)
-        super().save_model(request, obj, form, change)
+        coords = Location.fetch_coordinates(address)
+        if coords:
+            Location.objects.get_or_create(address=address, lat=coords.lat, lon=coords.lon)
+            super().save_model(request, obj, form, change)
+        else:
+            super().save_model(request, obj, form, change)
