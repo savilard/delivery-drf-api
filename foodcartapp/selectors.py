@@ -7,7 +7,7 @@ from location.models import Location, LocationCoords
 
 
 def get_restaurants_with_products_from_order(
-    order: Order, products_in_restaurants: List[RestaurantMenuItem], locations,
+    order: Order, products_in_restaurants: List[RestaurantMenuItem], location_addresses,
 ):
     order_products = order.order_products.all()
     restaurants_with_products_from_order = []
@@ -24,12 +24,12 @@ def get_restaurants_with_products_from_order(
     return calculate_distances_to_order(
         restaurants=set.intersection(*map(set, restaurants_with_products_from_order)),
         order_address=order.address,
-        locations=locations,
+        location_addresses=location_addresses,
     )
 
 
-def get_location_coords(address: str, locations) -> Optional[LocationCoords]:
-    coords = locations.get(address, False)
+def get_location_coords(address: str, location_addresses) -> Optional[LocationCoords]:
+    coords = location_addresses.get(address, False)
     if coords:
         return coords
 
@@ -45,13 +45,13 @@ def get_location_coords(address: str, locations) -> Optional[LocationCoords]:
     return LocationCoords(lat=location.lat, lon=location.lon)
 
 
-def calculate_distances_to_order(restaurants, order_address: str, locations):
-    order_coords = get_location_coords(order_address, locations)
+def calculate_distances_to_order(restaurants, order_address: str, location_addresses):
+    order_coords = get_location_coords(order_address, location_addresses)
 
     restaurants_with_order_distance = []
 
     for restaurant in restaurants:
-        restaurant_coords = get_location_coords(restaurant.address, locations)
+        restaurant_coords = get_location_coords(restaurant.address, location_addresses)
 
         if order_coords is None or restaurant_coords is None:
             distance_between_restaurant_and_order = 0
