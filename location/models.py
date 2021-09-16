@@ -17,7 +17,7 @@ class LocationManager(models.Manager):
 
     def to_dict(self):
         return {
-            location.address: (LocationCoords(lat=location.lat, lon=location.lon))
+            location.address: LocationCoords(lat=location.lat, lon=location.lon)
             for location in self.all()
         }
 
