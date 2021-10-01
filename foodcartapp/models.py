@@ -134,6 +134,9 @@ class OrderQuerySet(models.QuerySet):
             )
         )
 
+    def only_unprocessed(self):
+        return self.calculate_order_amount().exclude(status='processed')
+
 
 class Order(models.Model):
     PROCESSED = 'processed'
