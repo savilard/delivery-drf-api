@@ -1,21 +1,23 @@
-from typing import List, Optional
+from typing import Optional
 
 from geopy import distance
 
-from foodcartapp.models import Order, RestaurantMenuItem
 from location.models import Location, LocationCoords
 
 
-def get_restaurants_with_products_from_order(
-    order: Order, products_in_restaurants: List[RestaurantMenuItem], location_addresses,
-):
+def get_restaurants_with_products_from_order(order, products_in_restaurants):
     order_products = order.order_products.all()
     restaurants_with_products_from_order = []
 
     for order_product in order_products:
         restaurants_with_products_from_order.append(
             [
-                product_in_restaurants.restaurant
+                (
+                    product_in_restaurants.restaurant,
+                    product_in_restaurants.restaurant_lat,
+                    product_in_restaurants.restaurant_lon,
+                )
+
                 for product_in_restaurants in products_in_restaurants
                 if product_in_restaurants.product == order_product.product
             ]
@@ -24,14 +26,16 @@ def get_restaurants_with_products_from_order(
     return calculate_distances_to_order(
         restaurants=set.intersection(*map(set, restaurants_with_products_from_order)),
         order_address=order.address,
-        location_addresses=location_addresses,
+        order_lat=order.lat,
+        order_lon=order.lon,
     )
 
 
-def get_location_coords(address: str, location_addresses) -> Optional[LocationCoords]:
-    coords = location_addresses.get(address, False)
-    if coords:
-        return coords
+def get_location_coords(
+    address: str, lat: Optional[float], lon: Optional[float],
+) -> Optional[LocationCoords]:
+    if lat is not None and lon is not None:
+        return LocationCoords(lat=lat, lon=lon)
 
     coords = Location.fetch_coordinates(address)
     if coords is None:
@@ -45,13 +49,24 @@ def get_location_coords(address: str, location_addresses) -> Optional[LocationCo
     return LocationCoords(lat=location.lat, lon=location.lon)
 
 
-def calculate_distances_to_order(restaurants, order_address: str, location_addresses):
-    order_coords = get_location_coords(order_address, location_addresses)
+def calculate_distances_to_order(
+    restaurants, order_address: str, order_lat: float, order_lon: float,
+):
+    order_coords = get_location_coords(
+        address=order_address,
+        lat=order_lat,
+        lon=order_lon,
+    )
 
     restaurants_with_order_distance = []
 
-    for restaurant in restaurants:
-        restaurant_coords = get_location_coords(restaurant.address, location_addresses)
+    for restaurant, restaurant_lat, restaurant_lon in restaurants:
+
+        restaurant_coords = get_location_coords(
+            address=restaurant.address,
+            lat=restaurant_lat,
+            lon=restaurant_lon,
+        )
 
         if order_coords is None or restaurant_coords is None:
             distance_between_restaurant_and_order = 0

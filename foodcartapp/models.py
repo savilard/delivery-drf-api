@@ -1,7 +1,10 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Subquery, OuterRef
 from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
+
+from location.models import Location
 
 
 class Restaurant(models.Model):
@@ -95,6 +98,21 @@ class Product(models.Model):
         return self.name
 
 
+class RestaurantMenuItemQuerySet(models.QuerySet):
+    def with_restaurant_coords_from_cache(self):
+        location = Location.objects.filter(address=OuterRef('restaurant__address'))
+        return self.annotate(
+            restaurant_lat=Subquery(
+                queryset=location.values('lat'),
+                output_field=models.FloatField(),
+            ),
+            restaurant_lon=Subquery(
+                queryset=location.values('lon'),
+                output_field=models.FloatField(),
+            ),
+        )
+
+
 class RestaurantMenuItem(models.Model):
     restaurant = models.ForeignKey(
         Restaurant,
@@ -114,6 +132,8 @@ class RestaurantMenuItem(models.Model):
         db_index=True
     )
 
+    objects = RestaurantMenuItemQuerySet.as_manager()
+
     class Meta:
         verbose_name = 'пункт меню ресторана'
         verbose_name_plural = 'пункты меню ресторана'
@@ -132,6 +152,22 @@ class OrderQuerySet(models.QuerySet):
                 models.F('order_products__cost'),
                 output_field=models.DecimalField(),
             )
+        )
+
+    def only_unprocessed(self):
+        return self.calculate_order_amount().exclude(status='processed')
+
+    def with_coords_from_cache(self):
+        location = Location.objects.filter(address=OuterRef('address'))
+        return self.annotate(
+            lat=Subquery(
+                queryset=location.values('lat'),
+                output_field=models.FloatField(),
+            ),
+            lon=Subquery(
+                queryset=location.values('lon'),
+                output_field=models.FloatField(),
+            ),
         )
 
 
