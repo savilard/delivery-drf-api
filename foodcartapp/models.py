@@ -1,7 +1,10 @@
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Subquery, OuterRef
 from django.utils import timezone
 from phonenumber_field.modelfields import PhoneNumberField
+
+from location.models import Location
 
 
 class Restaurant(models.Model):
@@ -136,6 +139,19 @@ class OrderQuerySet(models.QuerySet):
 
     def only_unprocessed(self):
         return self.calculate_order_amount().exclude(status='processed')
+
+    def with_coords(self):
+        location = Location.objects.filter(address=OuterRef('address'))
+        return self.annotate(
+            lat=Subquery(
+                queryset=location.values('lat'),
+                output_field=models.FloatField(),
+            ),
+            lon=Subquery(
+                queryset=location.values('lon'),
+                output_field=models.FloatField(),
+            ),
+        )
 
 
 class Order(models.Model):
