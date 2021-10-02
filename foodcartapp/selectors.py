@@ -12,7 +12,12 @@ def get_restaurants_with_products_from_order(order, products_in_restaurants):
     for order_product in order_products:
         restaurants_with_products_from_order.append(
             [
-                product_in_restaurants.restaurant
+                (
+                    product_in_restaurants.restaurant,
+                    product_in_restaurants.restaurant_lat,
+                    product_in_restaurants.restaurant_lon,
+                )
+
                 for product_in_restaurants in products_in_restaurants
                 if product_in_restaurants.product == order_product.product
             ]
@@ -49,8 +54,9 @@ def calculate_distances_to_order(restaurants, order_address: str, order_lat, ord
 
     restaurants_with_order_distance = []
 
-    for restaurant in restaurants:
-        restaurant_coords = get_location_coords(restaurant.address)
+    for restaurant, restaurant_lat, restaurant_lon in restaurants:
+
+        restaurant_coords = get_location_coords(restaurant.address, restaurant_lat, restaurant_lon)
 
         if order_coords is None or restaurant_coords is None:
             distance_between_restaurant_and_order = 0

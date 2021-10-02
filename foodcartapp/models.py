@@ -98,6 +98,21 @@ class Product(models.Model):
         return self.name
 
 
+class RestaurantMenuItemQuerySet(models.QuerySet):
+    def get_restaurant_coords(self):
+        location = Location.objects.filter(address=OuterRef('restaurant__address'))
+        return self.annotate(
+            restaurant_lat=Subquery(
+                queryset=location.values('lat'),
+                output_field=models.FloatField(),
+            ),
+            restaurant_lon=Subquery(
+                queryset=location.values('lon'),
+                output_field=models.FloatField(),
+            ),
+        )
+
+
 class RestaurantMenuItem(models.Model):
     restaurant = models.ForeignKey(
         Restaurant,
@@ -116,6 +131,8 @@ class RestaurantMenuItem(models.Model):
         default=True,
         db_index=True
     )
+
+    objects = RestaurantMenuItemQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'пункт меню ресторана'
