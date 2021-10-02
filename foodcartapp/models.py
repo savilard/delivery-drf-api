@@ -99,7 +99,7 @@ class Product(models.Model):
 
 
 class RestaurantMenuItemQuerySet(models.QuerySet):
-    def get_restaurant_coords(self):
+    def with_restaurant_coords_from_cache(self):
         location = Location.objects.filter(address=OuterRef('restaurant__address'))
         return self.annotate(
             restaurant_lat=Subquery(
@@ -157,7 +157,7 @@ class OrderQuerySet(models.QuerySet):
     def only_unprocessed(self):
         return self.calculate_order_amount().exclude(status='processed')
 
-    def with_coords(self):
+    def with_coords_from_cache(self):
         location = Location.objects.filter(address=OuterRef('address'))
         return self.annotate(
             lat=Subquery(

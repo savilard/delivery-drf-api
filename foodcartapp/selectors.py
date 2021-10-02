@@ -32,31 +32,41 @@ def get_restaurants_with_products_from_order(order, products_in_restaurants):
 
 
 def get_location_coords(
-    address: str, lat: Optional[float] = None, lon: Optional[float] = None,
+    address: str, lat: Optional[float], lon: Optional[float],
 ) -> Optional[LocationCoords]:
     if lat is not None and lon is not None:
         return LocationCoords(lat=lat, lon=lon)
-    else:
-        coords = Location.fetch_coordinates(address)
-        if coords is None:
-            return None
 
-        location, is_created = Location.objects.get_or_create(
-            address=address,
-            lat=coords.lat,
-            lon=coords.lon,
-        )
-        return LocationCoords(lat=location.lat, lon=location.lon)
+    coords = Location.fetch_coordinates(address)
+    if coords is None:
+        return None
+
+    location, is_created = Location.objects.get_or_create(
+        address=address,
+        lat=coords.lat,
+        lon=coords.lon,
+    )
+    return LocationCoords(lat=location.lat, lon=location.lon)
 
 
-def calculate_distances_to_order(restaurants, order_address: str, order_lat, order_lon):
-    order_coords = get_location_coords(order_address, order_lat, order_lon)
+def calculate_distances_to_order(
+    restaurants, order_address: str, order_lat: float, order_lon: float,
+):
+    order_coords = get_location_coords(
+        address=order_address,
+        lat=order_lat,
+        lon=order_lon,
+    )
 
     restaurants_with_order_distance = []
 
     for restaurant, restaurant_lat, restaurant_lon in restaurants:
 
-        restaurant_coords = get_location_coords(restaurant.address, restaurant_lat, restaurant_lon)
+        restaurant_coords = get_location_coords(
+            address=restaurant.address,
+            lat=restaurant_lat,
+            lon=restaurant_lon,
+        )
 
         if order_coords is None or restaurant_coords is None:
             distance_between_restaurant_and_order = 0
