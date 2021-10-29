@@ -85,9 +85,14 @@ WSGI_APPLICATION = 'star_burger.wsgi.application'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+db_user = env('POSTGRES_USER')
+db_pass = env('POSTGRES_PASSWORD')
+db_name = env('POSTGRES_DB')
+db_port = env('DB_PORT')
+
 DATABASES = {
     'default': dj_database_url.config(
-        default='sqlite:////{0}'.format(os.path.join(BASE_DIR, 'db.sqlite3'))
+        default=f'postgres://{db_user}:{db_pass}@localhost:{db_port}/{db_name}',
     )
 }
 
@@ -135,4 +140,3 @@ ROLLBAR = {
     'root': BASE_DIR,
     'branch': Repo(path=BASE_DIR).active_branch.name,
 }
-rollbar.init(**ROLLBAR)
