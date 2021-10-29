@@ -145,6 +145,8 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 - `YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/)
 
+## TODO добавить подключение postgresql
+
 
 ## Как настроить Rollbar
 

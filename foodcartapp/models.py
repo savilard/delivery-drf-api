@@ -207,7 +207,7 @@ class Order(models.Model):
         'Способ оплаты',
         choices=PAYMENT_METHOD_CHOICES,
         default=NOT_SELECTED,
-        max_length=12,
+        max_length=15,
         db_index=True,
     )
 
