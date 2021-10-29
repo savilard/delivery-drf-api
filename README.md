@@ -145,6 +145,14 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 - `YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/)
 
+
+## Как настроить Rollbar
+
+- Зарегистрируйтесь в [Rollbar](https://rollbar.com/);
+- Когда речь зайдёт о SDK, выбирайте Django;
+- В `.env` файл добавьте `ROLLBAR_ACCESS_TOKEN` - токен для доступа к Rollbar.
+
+
 ## Цели проекта
 
 Код написан в учебных целях — это урок в курсе по Python и веб-разработке на сайте [Devman](https://dvmn.org). За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).

@@ -1,16 +1,15 @@
 import os
 
 import dj_database_url
-
+import rollbar
 from environs import Env
-
+from git import Repo
 
 env = Env()
 env.read_env()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
 
 SECRET_KEY = env('SECRET_KEY', 'etirgvonenrfnoerngorenogneongg334g')
 DEBUG = env.bool('DEBUG', True)
@@ -42,6 +41,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
+    'rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404',
 ]
 
 ROOT_URLCONF = 'star_burger.urls'
@@ -121,10 +122,17 @@ INTERNAL_IPS = [
     '127.0.0.1'
 ]
 
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
     os.path.join(BASE_DIR, "bundles"),
 ]
 
 YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
+
+ROLLBAR = {
+    'access_token': env.str('ROLLBAR_ACCESS_TOKEN'),
+    'environment': 'development' if DEBUG else 'production',
+    'root': BASE_DIR,
+    'branch': Repo(path=BASE_DIR).active_branch.name,
+}
+rollbar.init(**ROLLBAR)
