@@ -145,7 +145,17 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `ALLOWED_HOSTS` — [см. документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts)
 - `YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/)
 
-## TODO добавить подключение postgresql
+## Как настроить postgresql:
+1. Установить docker и docker-compose;
+2. Добавить в `.env` файл:
+- `POSTGRES_USER` - имя пользователя postgresql
+- `POSTGRES_PASSWORD`=пароль к базе данных
+- `POSTGRES_DB`=имя базы данных
+- `DB_PORT`=5432
+3. Запустите postgresql:
+```bash
+docker-compose up -d
+```
 
 
 ## Как настроить Rollbar
