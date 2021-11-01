@@ -5,12 +5,12 @@
 ENVIRONMENT=production
 REVISION=$(git rev-parse --verify HEAD)
 
+source .venv/bin/activate
 http POST https://api.rollbar.com/api/1/deploy/ access_token=$ROLLBAR_ACCESS_TOKEN environment=$ENVIRONMENT revision=$REVISION
 
 echo "Update code"
 git pull
 echo "Update deps"
-source .venv/bin/activate
 pip install -r requirements.txt
 npm install --include=dev
 echo "Update frontend"
