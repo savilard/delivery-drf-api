@@ -1,4 +1,12 @@
 #!/bin/bash
+
+. .env
+
+ENVIRONMENT=production
+REVISION=$(git rev-parse --verify HEAD)
+
+http POST https://api.rollbar.com/api/1/deploy/ access_token=$ROLLBAR_ACCESS_TOKEN environment=$ENVIRONMENT revision=$REVISION
+
 echo "Update code"
 git pull
 echo "Update deps"
