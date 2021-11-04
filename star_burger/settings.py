@@ -130,8 +130,8 @@ STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesSto
 YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
 
 ROLLBAR = {
-    'access_token': env.str('ROLLBAR_ACCESS_TOKEN'),
-    'environment': 'development' if DEBUG else 'production',
+    'access_token': env.str('ROLLBAR_ACCESS_TOKEN', ''),
+    'environment': env.str('ENVIRONMENT', default='development'),
     'root': BASE_DIR,
     'branch': Repo(path=BASE_DIR).active_branch.name,
 }
