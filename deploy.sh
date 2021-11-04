@@ -2,7 +2,6 @@
 
 . .env
 
-ENVIRONMENT=production
 REVISION=$(git rev-parse --verify HEAD)
 
 source .venv/bin/activate
