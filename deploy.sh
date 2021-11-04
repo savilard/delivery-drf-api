@@ -14,7 +14,7 @@ npm install --include=dev
 echo "Update frontend"
 parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 echo "Update Django static"
-python manage.py collectstatic --clear --noinput
+python manage.py collectstatic --noinput
 echo "Migrate"
 python manage.py migrate --noinput
 echo "Restart starburger.service"
