@@ -157,9 +157,11 @@ docker-compose up -d
 
 ## Как настроить Rollbar
 
-- Зарегистрируйтесь в [Rollbar](https://rollbar.com/);
-- Когда речь зайдёт о SDK, выбирайте Django;
-- В `.env` файл добавьте `ROLLBAR_ACCESS_TOKEN` - токен для доступа к Rollbar.
+1. Зарегистрируйтесь в [Rollbar](https://rollbar.com/);
+2. Когда речь зайдёт о SDK, выбирайте Django;
+3. В `.env` файл добавьте:
+- `ROLLBAR_ACCESS_TOKEN` - токен для доступа к Rollbar,
+- `ENVIRONMENT` - название окружения.
 
 
 ## Как деплоить
