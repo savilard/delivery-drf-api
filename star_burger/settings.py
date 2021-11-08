@@ -41,7 +41,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
-    'rollbar.contrib.django.middleware.RollbarNotifierMiddleware',
     'rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404',
 ]
 
@@ -85,9 +84,8 @@ WSGI_APPLICATION = 'star_burger.wsgi.application'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-DB_URL = os.getenv('DB_URL')
 DATABASES = {
-    'default': dj_database_url.config(default=DB_URL),
+    'default': dj_database_url.config(),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -131,7 +129,7 @@ YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
 
 ROLLBAR = {
     'access_token': env.str('ROLLBAR_ACCESS_TOKEN', ''),
-    'environment': env.str('ENVIRONMENT', default='development'),
+    'environment': env.str('ROLLBAR_ENVIRONMENT', default='development'),
     'root': BASE_DIR,
     'branch': Repo(path=BASE_DIR).active_branch.name,
 }

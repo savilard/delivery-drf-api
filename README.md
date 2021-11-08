@@ -148,7 +148,7 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 ## Как настроить postgresql:
 1. Установите docker и docker-compose;
 2. Добавьте в `.env` файл:
-- `DB_URL` - 'postgres://[POSTGRES_USER]:[POSTGRES_PASSWORD]@localhost:5432/[POSTGRES_DB]'
+- `DATABASE_URL` - 'postgres://[POSTGRES_USER]:[POSTGRES_PASSWORD]@localhost:5432/[POSTGRES_DB]'
 
 3. Запустите postgresql:
 ```bash
@@ -161,7 +161,7 @@ docker-compose up -d
 2. Когда речь зайдёт о SDK, выбирайте Django;
 3. В `.env` файл добавьте:
 - `ROLLBAR_ACCESS_TOKEN` - токен для доступа к Rollbar,
-- `ENVIRONMENT` - название окружения.
+- `ROLLBAR_ENVIRONMENT` - название окружения.
 
 
 ## Как деплоить

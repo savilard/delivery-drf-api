@@ -18,5 +18,5 @@ echo "Migrate"
 python manage.py migrate --noinput
 echo "Restart starburger.service"
 systemctl restart starburger.service
-http POST https://api.rollbar.com/api/1/deploy/ access_token=$ROLLBAR_ACCESS_TOKEN environment=$ENVIRONMENT revision=$REVISION
+http POST https://api.rollbar.com/api/1/deploy/ access_token=$ROLLBAR_ACCESS_TOKEN environment=$ROLLBAR_ENVIRONMENT revision=$REVISION
 echo "Deploy successfully completed"
