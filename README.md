@@ -148,7 +148,7 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 ## Как настроить postgresql:
 1. Установите docker и docker-compose;
 2. Добавьте в `.env` файл:
-- `DB_URL` - 'postgres://[POSTGRES_USER]:[POSTGRES_PASSWORD]@localhost:5432/[POSTGRES_DB]'
+- `DATABASE_URL` - 'postgres://[POSTGRES_USER]:[POSTGRES_PASSWORD]@localhost:5432/[POSTGRES_DB]'
 
 3. Запустите postgresql:
 ```bash

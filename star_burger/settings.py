@@ -84,9 +84,8 @@ WSGI_APPLICATION = 'star_burger.wsgi.application'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
-DB_URL = os.getenv('DB_URL')
 DATABASES = {
-    'default': dj_database_url.config(default=DB_URL),
+    'default': dj_database_url.config(),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
