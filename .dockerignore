@@ -1,0 +1,8 @@
+db.sqlite3
+docker-compose.yml
+docker-compose.prod.yml
+media/
+deploy.sh
+tests/
+staticfiles/
+Makefile
