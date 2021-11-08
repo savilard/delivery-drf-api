@@ -161,7 +161,7 @@ docker-compose up -d
 2. Когда речь зайдёт о SDK, выбирайте Django;
 3. В `.env` файл добавьте:
 - `ROLLBAR_ACCESS_TOKEN` - токен для доступа к Rollbar,
-- `ENVIRONMENT` - название окружения.
+- `ROLLBAR_ENVIRONMENT` - название окружения.
 
 
 ## Как деплоить
