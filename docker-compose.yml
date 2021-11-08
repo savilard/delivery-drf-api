@@ -1,11 +1,26 @@
 version: "3.8"
 
 services:
+  server:
+    container_name: starburger-server
+    restart: always
+    build:
+        context: .
+        dockerfile: ./docker/server/Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/opt/app/
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - db
 
   db:
-    restart: always
     image: postgres:13.0-alpine
-    container_name: django-postgres
+    container_name: starburger-db
+    restart: always
     env_file:
       - .env
     ports:
