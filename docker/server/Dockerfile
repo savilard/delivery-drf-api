@@ -29,7 +29,7 @@ RUN python -m venv ${VIRTUAL_ENV}
 
 # ---------------------------------------------------------------
 
-FROM env-creater AS dev-builder
+FROM env-creater AS builder
 COPY requirements.txt .
 RUN --mount=type=cache,target=/root/.cache/pip \
     ${VIRTUAL_ENV}/bin/pip install -r requirements.txt
@@ -52,14 +52,14 @@ RUN chmod +x '/wait_db.sh'
 
 # ---------------------------------------------------------------
 
-FROM base AS dev
+FROM base AS release
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
   PYTHONUNBUFFERED=1 \
   PIP_DEFAULT_TIMEOUT=100 \
   GIT_PYTHON_REFRESH=quiet
 
-COPY --from=dev-builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
+COPY --from=builder ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=base-builder /usr/local/bin/tini /usr/local/bin/tini
 COPY --from=base-builder /usr/local/bin/dockerize /usr/local/bin/dockerize
 COPY . ${APP_ROOT}

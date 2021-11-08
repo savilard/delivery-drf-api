@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  server:
+    build:
+        context: .
+        dockerfile: ./docker/server/Dockerfile
+    expose:
+      - 8000
+    restart: always
+    volumes:
+      - static_volume:/opt/app/staticfiles
+      - media_volume:/opt/app/media
+    command: sh ./docker/server/gunicorn.sh
+    env_file:
+      - .env
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    restart: always
+    env_file:
+      - .env
+
+  nginx:
+    build: ./docker/nginx
+    container_name: starburger-nginx
+    ports:
+      - 80:80
+    env_file:
+      - .env
+    volumes:
+      - static_volume:/opt/app/staticfiles
+      - media_volume:/opt/app/media
+    depends_on:
+      - server
+
+
+volumes:
+  postgres_data:
+  static_volume:
+  media_volume:
