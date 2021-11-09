@@ -26,7 +26,7 @@ services:
       - .env
 
   nginx:
-    build: ./docker/
+    build: ./docker/nginx
     restart: always
     container_name: starburger-nginx
     ports:
