@@ -11,6 +11,7 @@ services:
     volumes:
       - static_volume:/opt/app/staticfiles
       - ./media:/opt/app/media
+      - ./bundles:/opt/app/bundles
     command: sh ./docker/server/gunicorn.sh
     env_file:
       - .env
