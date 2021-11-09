@@ -10,7 +10,7 @@ services:
     restart: always
     volumes:
       - static_volume:/opt/app/staticfiles
-      - media_volume:/opt/app/media
+      - ./media:/opt/app/media
     command: sh ./docker/server/gunicorn.sh
     env_file:
       - .env
@@ -34,7 +34,7 @@ services:
       - .env
     volumes:
       - static_volume:/opt/app/staticfiles
-      - media_volume:/opt/app/media
+      - ./media:/opt/app/media
     depends_on:
       - server
 
@@ -42,4 +42,3 @@ services:
 volumes:
   postgres_data:
   static_volume:
-  media_volume:
