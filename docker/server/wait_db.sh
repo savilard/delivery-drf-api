@@ -7,7 +7,7 @@ readonly cmd="$*"
 
 postgres_ready () {
   echo "postgres_ready"
-dockerize -wait "tcp://localhost:5432" -timeout 10s
+dockerize -wait "tcp://${SQL_HOST:-db}:${SQL_PORT:-5432}" -timeout 10s
 }
 
 until postgres_ready; do
