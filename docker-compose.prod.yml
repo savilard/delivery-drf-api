@@ -30,12 +30,14 @@ services:
     container_name: starburger-nginx
     ports:
       - 80:80
+      - 443:443
     env_file:
       - .env
     volumes:
       - static_volume:/opt/app/staticfiles
       - ./media:/opt/app/media
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d
+      - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - server
 
