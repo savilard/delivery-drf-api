@@ -26,7 +26,8 @@ services:
       - .env
 
   nginx:
-    build: ./docker/nginx
+    build: ./docker/
+    restart: always
     container_name: starburger-nginx
     ports:
       - 80:80
@@ -36,7 +37,6 @@ services:
     volumes:
       - static_volume:/opt/app/staticfiles
       - ./media:/opt/app/media
-      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
       - server
