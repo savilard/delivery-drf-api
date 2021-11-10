@@ -146,14 +146,9 @@ parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 - `YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/)
 
 ## Как настроить postgresql:
-1. Установите docker и docker-compose;
-2. Добавьте в `.env` файл:
-- `DATABASE_URL` - 'postgres://[POSTGRES_USER]:[POSTGRES_PASSWORD]@localhost:5432/[POSTGRES_DB]'
-
-3. Запустите postgresql:
-```bash
-docker-compose up -d
-```
+Добавьте в `.env` файл:
+- `DATABASE_URL` - 'postgres://[POSTGRES_USER]:[POSTGRES_PASSWORD]@localhost:5432/[POSTGRES_DB]';
+- `POSTGRES_PASSWORD` - пароль от postgresql
 
 ## Как настроить Rollbar
 
@@ -164,15 +159,35 @@ docker-compose up -d
 - `ROLLBAR_ENVIRONMENT` - название окружения.
 
 
-## Как деплоить
-1. Разрешите файлу `deploy.sh` запускаться:
+## Как запустить dev-версию в docker
+
+1. Установить docker и docker-compose;
+2. Для запуска dev версии сайта выполните команду:
 ```bash
-chmod +x deploy.sh
+make docker-dev
 ```
 
-2. Запустите деплой:
+## Как запустить prod-версию в docker
+1. Установить docker и docker-compose;
+2. Настройте ssl сертификат с помощью [certbot](https://certbot.eff.org/);
+3. Переименуйте файл nginx.conf.example в nginx.conf;
+4. Замените example.com на адрес своего сайта, example_ip на ip хостинга;
+5. Выполните команду:
+```bash
+make docker-prod
+```
+
+
+## Как деплоить
+
+1. Без docker:
 ```bash
 ./deploy.sh
+```
+
+2. С docker:
+```bash
+./deploy-docker.sh
 ```
 
 
