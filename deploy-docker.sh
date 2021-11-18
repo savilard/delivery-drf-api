@@ -12,6 +12,7 @@ npm install --include=dev
 echo "Update frontend"
 parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
 echo "Update Django static"
+docker compose cp ./staticfiles nginx:/opt/app/staticfiles
 docker compose exec server python manage.py migrate --noinput
 .venv/bin/http POST https://api.rollbar.com/api/1/deploy/ access_token=$ROLLBAR_ACCESS_TOKEN environment=$ROLLBAR_ENVIRONMENT revision=$REVISION
 echo "Deploy successfully completed"
