@@ -7,7 +7,7 @@ services:
     build:
         context: .
         dockerfile: ./docker/server/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: sh ./docker/server/runserver.sh
     volumes:
       - .:/opt/app/
     ports:
@@ -16,6 +16,20 @@ services:
       - .env
     depends_on:
       - db
+
+  parcel:
+    container_name: starburger-parcel
+    restart: always
+    build:
+        context: .
+        dockerfile: ./docker/parcel/Dockerfile
+    command: parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
+    volumes:
+      - .:/opt/app/
+    ports:
+      - "1234:1234"
+    depends_on:
+      - server
 
   db:
     image: postgres:13.0-alpine
