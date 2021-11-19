@@ -2,6 +2,7 @@ import os
 
 import dj_database_url
 import rollbar
+from django.conf import settings
 from environs import Env
 from git import Repo
 
@@ -128,6 +129,10 @@ INTERNAL_IPS = [
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
 ]
+
+if settings.DEBUG:
+    STATICFILES_DIRS.append(os.path.join(BASE_DIR, "bundles"))
+
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
