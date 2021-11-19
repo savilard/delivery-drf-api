@@ -128,10 +128,8 @@ INTERNAL_IPS = [
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
+    os.path.join(BASE_DIR, "bundles"),
 ]
-
-if settings.DEBUG:
-    STATICFILES_DIRS.append(os.path.join(BASE_DIR, "bundles"))
 
 YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
 
