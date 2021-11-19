@@ -7,7 +7,7 @@ services:
     build:
         context: .
         dockerfile: ./docker/server/Dockerfile
-    command: sh ./docker/server/runserver.sh
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/opt/app/
     ports:
