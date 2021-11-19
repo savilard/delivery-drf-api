@@ -133,8 +133,6 @@ STATICFILES_DIRS = [
 if settings.DEBUG:
     STATICFILES_DIRS.append(os.path.join(BASE_DIR, "bundles"))
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
 YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
 
 ROLLBAR = {
