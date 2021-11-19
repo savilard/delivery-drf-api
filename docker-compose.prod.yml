@@ -11,12 +11,25 @@ services:
     volumes:
       - static_volume:/opt/app/staticfiles
       - ./media:/opt/app/media
-      - ./bundles:/opt/app/bundles
     command: sh ./docker/server/gunicorn.sh
     env_file:
       - .env
     depends_on:
       - db
+      - parcel
+
+
+  parcel:
+    container_name: starburger-parcel
+    build:
+        context: .
+        dockerfile: ./docker/parcel/Dockerfile
+    volumes:
+      - static_volume:/opt/app/bundles
+    command: >
+      sh -c "parcel build bundles-src/index.js --dist-dir bundles --public-url="./""
+    ports:
+      - "1234:1234"
 
   db:
     image: postgres:13.0-alpine
