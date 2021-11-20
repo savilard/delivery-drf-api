@@ -64,6 +64,9 @@ make docker-prod
 
 `POSTGRES_PASSWORD` -- пароль от postgresql.
 
+`YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/).
+
+
 
 ## Как деплоить
 ```shell
