@@ -1,0 +1,4 @@
+-r requirements.txt
+
+mypy==0.910
+wemake-python-styleguide==0.15.3

@@ -12,3 +12,8 @@ docker-prod:
 
 secretkey:
 	@poetry run python -c 'from django.utils.crypto import get_random_string; print(get_random_string(40))'
+
+.PHONY: lint
+lint:
+	flake8 foodcartapp/
+	mypy foodcartapp/
