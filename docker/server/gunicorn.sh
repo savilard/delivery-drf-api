@@ -3,8 +3,6 @@
 set -o errexit
 set -o nounset
 
-python manage.py collectstatic --noinput
-
 gunicorn star_burger.wsgi:application \
     --workers=5 \
     --max-requests=2000 \

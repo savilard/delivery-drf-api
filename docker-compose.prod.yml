@@ -26,8 +26,6 @@ services:
         dockerfile: ./docker/parcel/Dockerfile
     volumes:
       - static_volume:/opt/app/bundles
-    command: >
-      sh -c "parcel build bundles-src/index.js --dist-dir bundles --public-url="./""
     ports:
       - "1234:1234"
 

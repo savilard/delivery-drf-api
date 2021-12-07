@@ -23,7 +23,6 @@ services:
     build:
         context: .
         dockerfile: ./docker/parcel/Dockerfile
-    command: parcel watch bundles-src/index.js --dist-dir bundles --public-url="./"
     volumes:
       - .:/opt/app/
     ports:

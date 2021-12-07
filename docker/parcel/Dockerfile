@@ -6,6 +6,9 @@ FROM node:${NODEJS_VERSION}-buster-slim
 WORKDIR /opt/app
 
 COPY ["package.json", "package-lock.json*", "./"]
-COPY ["./bundles-src/", "./bundles-src/"]
 
 RUN npm install --include=dev && npm install -g parcel@latest
+
+COPY ["./bundles-src/", "./bundles-src/"]
+
+RUN parcel build bundles-src/index.js --dist-dir bundles --public-url="./"
