@@ -9,7 +9,6 @@ services:
       - 8000
     restart: always
     volumes:
-      - static_volume:/opt/app/staticfiles
       - ./media:/opt/app/media
     command: sh ./docker/server/gunicorn.sh
     env_file:
@@ -24,8 +23,6 @@ services:
     build:
         context: .
         dockerfile: ./docker/parcel/Dockerfile
-    volumes:
-      - static_volume:/opt/app/bundles
     ports:
       - "1234:1234"
 
@@ -47,7 +44,6 @@ services:
     env_file:
       - .env
     volumes:
-      - static_volume:/opt/app/staticfiles
       - ./media:/opt/app/media
       - /etc/letsencrypt:/etc/letsencrypt
     depends_on:
