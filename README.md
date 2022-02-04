@@ -72,16 +72,3 @@ make docker-prod
 ```shell
 ./deploy.sh
 ```
-
-## Demo server:
-- [домен](https://starburger.savilard.me/)
-- ip - 80.87.111.146
-- пользователь - root
-
-## Цели проекта
-
-Код написан в учебных целях — это урок в курсе по Python и веб-разработке на сайте [Devman](https://dvmn.org). За основу был взят код проекта [FoodCart](https://github.com/Saibharath79/FoodCart).
-
-Где используется репозиторий:
-
-- Второй и третий урок [учебного модуля Django](https://dvmn.org/modules/django/)
