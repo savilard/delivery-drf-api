@@ -19,6 +19,7 @@ services:
       YANDEX_GEOCODER_APIKEY: ${YANDEX_GEOCODER_APIKEY-REPLACE_ME}
     volumes:
       - ./src/backend:/opt/app/
+      - ./src/backend/bundles:/opt/app/bundles
     ports:
       - "8080:8080"
     depends_on:
@@ -29,13 +30,14 @@ services:
     restart: always
     build:
         context: .
-        dockerfile: ./src/docker/parcel/Dockerfile
+        dockerfile: ./src/frontend/docker/Dockerfile
     volumes:
-      - .:/opt/app/
+      - ./src/backend/bundles:/opt/app/bundles
     ports:
       - "1234:1234"
     depends_on:
       - backend
+    tty: true
 
   db:
     image: postgres:13.0-alpine
