@@ -81,15 +81,15 @@ WORKDIR ${APP_ROOT}
 
 FROM base AS dev
 
-COPY ./docker/django/wait_db.sh /wait_db.sh
+COPY ../backend/docker/django/wait_db.sh /wait_db.sh
 RUN chmod +x '/wait_db.sh'
 
 COPY --from=builder --chown=${APP_USER}:${APP_USER} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --from=base-builder --chown=${APP_USER}:${APP_USER} /usr/local/bin/tini /usr/local/bin/tini
 COPY --from=base-builder --chown=${APP_USER}:${APP_USER} /usr/local/bin/dockerize /usr/local/bin/dockerize
-COPY --chown=${APP_USER}:${APP_USER} . ${APP_ROOT}
+COPY --chown=${APP_USER}:${APP_USER} ./src/backend ${APP_ROOT}
 
-RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python src/manage.py collectstatic --noinput
+RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python manage.py collectstatic --noinput
 USER ${APP_USER}
 
 ENTRYPOINT ["tini", "--", "/wait_db.sh"]
@@ -98,9 +98,9 @@ ENTRYPOINT ["tini", "--", "/wait_db.sh"]
 
 FROM base AS release
 COPY --from=builder --chown=${APP_USER}:${APP_USER} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
-COPY --chown=${APP_USER}:${APP_USER} . ${APP_ROOT}
+COPY --chown=${APP_USER}:${APP_USER} ./src/backend ${APP_ROOT}
 
-RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python src/manage.py collectstatic --noinput
+RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python manage.py collectstatic --noinput
 
 USER ${APP_USER}
 EXPOSE 8000

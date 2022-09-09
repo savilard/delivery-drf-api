@@ -3,12 +3,11 @@ from pathlib import Path
 
 import dj_database_url
 from environs import Env
-from git import Repo
 
 env = Env()
 env.read_env()
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 SECRET_KEY = env('SECRET_KEY')
@@ -71,7 +70,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(BASE_DIR, "src/templates"),
+            os.path.join(BASE_DIR, "templates"),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -87,7 +86,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'star_burger.wsgi.application'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'src/media')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 DATABASES = {
@@ -126,8 +125,8 @@ INTERNAL_IPS = [
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "src/assets"),
-    os.path.join(BASE_DIR, "src/bundles"),
+    os.path.join(BASE_DIR, "assets"),
+    os.path.join(BASE_DIR, "bundles"),
 ]
 
 YANDEX_GEOCODER_APIKEY = env.str('YANDEX_GEOCODER_APIKEY')
@@ -136,5 +135,4 @@ ROLLBAR = {
     'access_token': env.str('ROLLBAR_ACCESS_TOKEN', ''),
     'environment': env.str('ROLLBAR_ENVIRONMENT', default='development'),
     'root': BASE_DIR,
-    'branch': Repo(path=BASE_DIR).active_branch.name,
 }
