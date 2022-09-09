@@ -144,5 +144,5 @@ cython_debug/
 .parcel-cache/
 .idea/
 staticfiles/
-docker/nginx/nginx.conf
 .python-version
+src/backend/bundles
