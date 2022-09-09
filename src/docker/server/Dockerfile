@@ -89,7 +89,7 @@ COPY --from=base-builder --chown=${APP_USER}:${APP_USER} /usr/local/bin/tini /us
 COPY --from=base-builder --chown=${APP_USER}:${APP_USER} /usr/local/bin/dockerize /usr/local/bin/dockerize
 COPY --chown=${APP_USER}:${APP_USER} . ${APP_ROOT}
 
-RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python manage.py collectstatic --noinput
+RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python src/manage.py collectstatic --noinput
 USER ${APP_USER}
 
 ENTRYPOINT ["tini", "--", "/wait_db.sh"]
@@ -100,7 +100,7 @@ FROM base AS release
 COPY --from=builder --chown=${APP_USER}:${APP_USER} ${VIRTUAL_ENV} ${VIRTUAL_ENV}
 COPY --chown=${APP_USER}:${APP_USER} . ${APP_ROOT}
 
-RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python manage.py collectstatic --noinput
+RUN SECRET_KEY=empty GIT_PYTHON_REFRESH=quiet YANDEX_GEOCODER_APIKEY=empty python src/manage.py collectstatic --noinput
 
 USER ${APP_USER}
 EXPOSE 8000

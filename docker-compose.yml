@@ -6,10 +6,10 @@ services:
     restart: always
     build:
         context: .
-        dockerfile: ./docker/server/Dockerfile
+        dockerfile: ./src/docker/server/Dockerfile
         args:
           - APP_ENV=dev
-    command: python manage.py runserver 0.0.0.0:8080
+    command: python src/manage.py runserver 0.0.0.0:8080
     environment:
       SECRET_KEY: ${SECRET_KEY-REPLACE_ME}
       DEBUG: ${DEBUG-TRUE}
@@ -29,7 +29,7 @@ services:
     restart: always
     build:
         context: .
-        dockerfile: ./docker/parcel/Dockerfile
+        dockerfile: ./src/docker/parcel/Dockerfile
     volumes:
       - .:/opt/app/
     ports:
