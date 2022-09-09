@@ -145,3 +145,4 @@ cython_debug/
 .idea/
 staticfiles/
 docker/nginx/nginx.conf
+.python-version
