@@ -1,24 +1,31 @@
 version: "3.8"
 
 services:
-  server:
-    container_name: starburger-server
+  backend:
+    container_name: starburger-backend
     restart: always
     build:
         context: .
         dockerfile: ./docker/server/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+        args:
+          - APP_ENV=dev
+    command: python manage.py runserver 0.0.0.0:8080
+    environment:
+      SECRET_KEY: ${SECRET_KEY-REPLACE_ME}
+      DEBUG: ${DEBUG-TRUE}
+      DATABASE_URL: ${DATABASE_URL-postgres://app_dev:OwOtBdfep9Frut@db:5432/app_dev}
+      ALLOWED_HOSTS: ${ALLOWED_HOSTS-127.0.0.1,localhost}
+      GIT_PYTHON_REFRESH: ${GIT_PYTHON_REFRESH-quiet}
+      YANDEX_GEOCODER_APIKEY: ${YANDEX_GEOCODER_APIKEY-REPLACE_ME}
     volumes:
       - .:/opt/app/
     ports:
-      - "8000:8000"
-    env_file:
-      - .env
+      - "8080:8080"
     depends_on:
       - db
 
-  parcel:
-    container_name: starburger-parcel
+  frontend:
+    container_name: starburger-frontend
     restart: always
     build:
         context: .
@@ -28,16 +35,18 @@ services:
     ports:
       - "1234:1234"
     depends_on:
-      - server
+      - backend
 
   db:
     image: postgres:13.0-alpine
-    container_name: starburger-db
+    container_name: starburger_db
     restart: always
-    env_file:
-      - .env
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB-app_dev}
+      POSTGRES_USER: ${POSTGRES_USER-app_dev}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD-OwOtBdfep9Frut}
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
 
