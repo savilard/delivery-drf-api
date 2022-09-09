@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "delivery-drf-api"
+version = "0.1.0"
+description = ""
+authors = ["savilard <vitaliyantonoff@gmail.com>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "3.2.12"
+Pillow = "9.0.1"
+environs = "9.3.2"
+django-phonenumber-field = "5.2.0"
+djangorestframework = "3.12.4"
+requests = "2.26.0"
+geopy = "2.2.0"
+phonenumbers = "8.12.35"
+gunicorn = "20.1.0"
+rollbar = "0.16.2"
+dj-database-url = "0.5.0"
+GitPython = "3.1.24"
+psycopg2-binary = "2.9.1"
+
+[tool.poetry.dev-dependencies]
+django-debug-toolbar = "3.2.1"
+wemake-python-styleguide = "^0.16.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
