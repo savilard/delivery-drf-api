@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import admin
 from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
@@ -6,7 +7,6 @@ from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme
 
 from location.models import Location
-from star_burger import settings
 from .models import Order, OrderProduct
 from .models import Product
 from .models import ProductCategory

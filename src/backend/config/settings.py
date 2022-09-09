@@ -49,7 +49,7 @@ MIDDLEWARE = [
     'rollbar.contrib.django.middleware.RollbarNotifierMiddlewareExcluding404',
 ]
 
-ROOT_URLCONF = 'star_burger.urls'
+ROOT_URLCONF = 'config.urls'
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
@@ -84,7 +84,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'star_burger.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
