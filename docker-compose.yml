@@ -17,6 +17,9 @@ services:
       ALLOWED_HOSTS: ${ALLOWED_HOSTS-127.0.0.1,localhost}
       GIT_PYTHON_REFRESH: ${GIT_PYTHON_REFRESH-quiet}
       YANDEX_GEOCODER_APIKEY: ${YANDEX_GEOCODER_APIKEY-REPLACE_ME}
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME-superuser}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL-superuser@super.email}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD-superpassword}
     volumes:
       - ./src/backend:/opt/app/
       - ./src/backend/bundles:/opt/app/bundles
@@ -31,13 +34,10 @@ services:
     build:
         context: .
         dockerfile: ./src/frontend/docker/Dockerfile
-    volumes:
-      - ./src/backend/bundles:/opt/app/bundles
     ports:
       - "1234:1234"
     depends_on:
       - backend
-    tty: true
 
   db:
     image: postgres:13.0-alpine
