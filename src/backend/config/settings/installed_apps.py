@@ -16,6 +16,7 @@ THIRD_PARTY_APPS: Tuple[str, ...] = (
 )
 
 LOCAL_APPS: Tuple[str, ...] = (
+    'core.apps.CoreConfig',
     'foodcartapp.apps.FoodcartappConfig',
     'restaurateur.apps.RestaurateurConfig',
     'location.apps.LocationConfig',
