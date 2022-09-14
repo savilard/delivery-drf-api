@@ -24,15 +24,34 @@ git clone https://github.com/savilard/delivery-drf-api.git
 cd  delivery-drf-api
 ```
 
-## Как запустить dev-версию
-1. Для запуска dev версии сайта выполните команду:
+## Как настроить dev-версию
+1. Для настройки dev версии сайта выполните команду:
 ```shell
-make docker-dev
+./scripts/setup.sh
 ```
-2. В новом терминале не выключая сайт запустите команды для настройки базы данных:
+В результате работы скрипта:
+- БД наполнится тестовыми данными;
+- выполнятся миграции;
+- будет создан superuser и логином `superuser` и паролем `superpassword` (или теми, которые будут заданы в переменные окружения `DJANGO_SUPERUSER_USERNAME` и `DJANGO_SUPERUSER_PASSWORD`).
+
+2. Запустите docker контейнеры:
 ```shell
-make migrate-dev
-make createsuperuser-dev
+docker compose up
+```
+
+Сайт будет доступен по адресу [127.0.0.1:8080](http://127.0.0.1:8080). Вход в админку по адресу [http://127.0.0.1:8080/admin/](http://127.0.0.1:8080/admin/). Список заказов - по адресу [http://127.0.0.1:8080/manager/orders/](http://127.0.0.1:8080/manager/orders/)
+
+Для тонкой настройки сайта используйте переменные окружения, как это принято с Docker Compose. Список доступных переменных можно найти внутри файла `docker-compose.yml`.
+
+
+## Как накатить свежие миграции
+1. Запустите docker контейнеры (если они не запущены):
+```shell
+docker compose up --build
+```
+2. В новой вкладке терминале не выключая сайт выполните команду:
+```shell
+docker-compose run --rm backend ./manage.py migrate
 ```
 
 ## Как запустить prod-версию в docker
@@ -43,6 +62,7 @@ make createsuperuser-dev
 ```bash
 make docker-prod
 ```
+
 
 ## Как настроить Rollbar
 
@@ -66,6 +86,11 @@ make docker-prod
 
 `YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/).
 
+`DJANGO_SUPERUSER_USERNAME` - username учетной записи суперпользователя..
+
+`DJANGO_SUPERUSER_EMAIL` - email учетной записи суперпользователя.
+
+`DJANGO_SUPERUSER_PASSWORD` - пароль учетной записи суперпользователя.
 
 
 ## Как деплоить
