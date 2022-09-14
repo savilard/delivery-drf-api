@@ -5,13 +5,9 @@ from django.shortcuts import reverse
 from django.templatetags.static import static
 from django.utils.html import format_html
 from django.utils.http import url_has_allowed_host_and_scheme
-
 from location.models import Location
-from .models import Order, OrderProduct
-from .models import Product
-from .models import ProductCategory
-from .models import Restaurant
-from .models import RestaurantMenuItem
+
+from foodcartapp.models import RestaurantMenuItem, Restaurant, Product, ProductCategory, OrderProduct, Order
 
 
 class RestaurantMenuItemInline(admin.TabularInline):
@@ -51,8 +47,6 @@ class ProductAdmin(admin.ModelAdmin):
         'category',
     ]
     search_fields = [
-        # FIXME SQLite can not convert letter case for cyrillic words properly, so search will be buggy.
-        # Migration to PostgreSQL is necessary
         'name',
         'category__name',
     ]
