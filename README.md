@@ -73,6 +73,12 @@ make docker-prod
 - `ROLLBAR_ENVIRONMENT` - название окружения.
 
 
+## Как запустить flake8:
+```shell
+docker compose run --rm backend sh -c "flake8"
+```
+
+
 ## Переменные окружения
 `SECRET_KEY` -- обязательная секретная настройка Django. Это соль для генерации хэшей. Значение может быть любым, важно лишь, чтобы оно никому не было известно. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#secret-key).
 
