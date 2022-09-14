@@ -1,4 +1,5 @@
-from foodcartapp.models import Order, OrderProduct
+from foodcartapp.models import Order
+from foodcartapp.models import OrderProduct
 
 
 def save_order_to_db(validated_data):

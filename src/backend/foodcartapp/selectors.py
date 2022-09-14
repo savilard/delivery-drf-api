@@ -2,7 +2,8 @@ from typing import Optional
 
 from geopy import distance
 
-from location.models import Location, LocationCoords
+from location.models import Location
+from location.models import LocationCoords
 
 
 def get_restaurants_with_products_from_order(order, products_in_restaurants):
@@ -17,10 +18,9 @@ def get_restaurants_with_products_from_order(order, products_in_restaurants):
                     product_in_restaurants.restaurant_lat,
                     product_in_restaurants.restaurant_lon,
                 )
-
                 for product_in_restaurants in products_in_restaurants
                 if product_in_restaurants.product == order_product.product
-            ]
+            ],
         )
 
     return calculate_distances_to_order(
@@ -32,7 +32,9 @@ def get_restaurants_with_products_from_order(order, products_in_restaurants):
 
 
 def get_location_coords(
-    address: str, lat: Optional[float], lon: Optional[float],
+    address: str,
+    lat: Optional[float],
+    lon: Optional[float],
 ) -> Optional[LocationCoords]:
     if lat is not None and lon is not None:
         return LocationCoords(lat=lat, lon=lon)
@@ -50,7 +52,10 @@ def get_location_coords(
 
 
 def calculate_distances_to_order(
-    restaurants, order_address: str, order_lat: float, order_lon: float,
+    restaurants,
+    order_address: str,
+    order_lat: float,
+    order_lon: float,
 ):
     order_coords = get_location_coords(
         address=order_address,
@@ -80,6 +85,6 @@ def calculate_distances_to_order(
             {
                 'restaurant': restaurant,
                 'order_distance': round(distance_between_restaurant_and_order, 2),
-            }
+            },
         )
     return sorted(restaurants_with_order_distance, key=lambda restaurant: restaurant['order_distance'])

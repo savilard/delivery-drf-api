@@ -1,41 +1,48 @@
 from django.db import transaction
 from django.http import JsonResponse
 from django.templatetags.static import static
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from .models import Product
-from .serializers import OrderSerializer
-from .services import save_order_to_db
+from foodcartapp.models import Product
+from foodcartapp.serializers import OrderSerializer
+from foodcartapp.services import save_order_to_db
 
 
 def banners_list_api(request):
+    """Banners list api."""
     # FIXME move data to db?
-    return JsonResponse([
-        {
-            'title': 'Burger',
-            'src': static('burger.jpg'),
-            'text': 'Tasty Burger at your door step',
+    return JsonResponse(
+        [
+            {
+                'title': 'Burger',
+                'src': static('burger.jpg'),
+                'text': 'Tasty Burger at your door step',
+            },
+            {
+                'title': 'Spices',
+                'src': static('food.jpg'),
+                'text': 'All Cuisines',
+            },
+            {
+                'title': 'New York',
+                'src': static('tasty.jpg'),
+                'text': 'Food is incomplete without a tasty dessert',
+            },
+        ],
+        safe=False,
+        json_dumps_params={
+            'ensure_ascii': False,
+            'indent': 4,
         },
-        {
-            'title': 'Spices',
-            'src': static('food.jpg'),
-            'text': 'All Cuisines',
-        },
-        {
-            'title': 'New York',
-            'src': static('tasty.jpg'),
-            'text': 'Food is incomplete without a tasty dessert',
-        }
-    ], safe=False, json_dumps_params={
-        'ensure_ascii': False,
-        'indent': 4,
-    })
+    )
 
 
 @api_view(['GET'])
 def product_list_api(request):
+    """Product list api endpoint."""
     products = Product.objects.select_related('category').available()
 
     dumped_products = []
@@ -54,7 +61,7 @@ def product_list_api(request):
             'restaurant': {
                 'id': product.id,
                 'name': product.name,
-            }
+            },
         }
         dumped_products.append(dumped_product)
     return Response(dumped_products)
@@ -63,6 +70,7 @@ def product_list_api(request):
 @transaction.atomic
 @api_view(['POST'])
 def register_order(request):
+    """Register order view."""
     serializer = OrderSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     order = save_order_to_db(serializer.validated_data)

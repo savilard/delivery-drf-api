@@ -1,6 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 
-from foodcartapp.models.order import OrderProduct, Order
+from foodcartapp.models.order import Order
+from foodcartapp.models.order import OrderProduct
 
 
 class OrderProductSerializer(ModelSerializer):
