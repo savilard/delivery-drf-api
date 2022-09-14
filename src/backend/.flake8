@@ -13,3 +13,7 @@ exclude = .git,__pycache__,.venv,.eggs,*.egg, foodcartapp/migrations
 
 # Disable some pydocstyle checks:
 ignore = D100, D104, D106, D401, X100, W504, RST303, RST304, DAR103, DAR203
+
+per-file-ignores =
+  config/settings/*.py: WPS226, WPS407, WPS412, WPS432
+  foodcartapp/models/*.py: WPS305, WPS306, WPS420, D105, WPS604, WPS110, WPS237, WPS432, WPS300, F401, WPS412, WPS115
