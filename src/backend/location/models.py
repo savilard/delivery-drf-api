@@ -1,21 +1,24 @@
-from dataclasses import dataclass
-from typing import Optional
+from typing import NamedTuple, Optional
 
-import requests
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+import requests
 
-@dataclass
-class LocationCoords:
+
+class LocationCoords(NamedTuple):
+    """Location coords."""
+
     lat: float
     lon: float
 
 
 class LocationManager(models.Manager):
+    """Location custom manager."""
 
     def get_addresses_and_their_coordinates(self):
+        """Get addresses and their coordinates."""
         return {
             location.address: LocationCoords(lat=location.lat, lon=location.lon)
             for location in self.all()
@@ -23,6 +26,8 @@ class LocationManager(models.Manager):
 
 
 class Location(models.Model):
+    """Location model."""
+
     address = models.CharField('Адрес', max_length=150, unique=True)
     lat = models.FloatField('Широта', blank=True, null=True)
     lon = models.FloatField('Долгота', blank=True, null=True)
@@ -38,17 +43,17 @@ class Location(models.Model):
         return self.address
 
     @staticmethod
-    def fetch_coordinates(place) -> Optional[LocationCoords]:
+    def fetch_coordinates(location_address: str) -> Optional[LocationCoords]:
         """Gets the coordinates of the place using Yandex Geocoder Api.
+
         Args:
-            apikey (str): apikey of Yandex Geocoder Api
-            place (srt): name of the place
+            location_address: location address
         Returns:
             LocationCoords: longitude and latitude of the place
         """
         base_url = 'https://geocode-maps.yandex.ru/1.x'
         payload = {
-            'geocode': place,
+            'geocode': location_address,
             'apikey': settings.YANDEX_GEOCODER_APIKEY,
             'format': 'json',
         }
