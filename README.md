@@ -8,7 +8,6 @@
 
 ![code climate](https://img.shields.io/codeclimate/maintainability/savilard/delivery-drf-api?style=for-the-badge)
 ![github actions](https://img.shields.io/github/workflow/status/savilard/delivery-drf-api/test/main?style=for-the-badge)
-![platform](https://img.shields.io/badge/platform-linux-brightgreen?style=for-the-badge)
 ![python](https://img.shields.io/badge/python-3.9-brightgreen?style=for-the-badge)
 ![license](https://img.shields.io/github/license/savilard/delivery-drf-api?style=for-the-badge)
 [![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg?style=for-the-badge)](https://github.com/wemake-services/wemake-python-styleguide)
