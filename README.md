@@ -21,15 +21,17 @@ The second interface is designed for the manager. This is where the processing o
 
 The third interface - this is the admin panel. It is mainly used by programmers when developing the site. The manager also comes here to update the menu of Star Burger restaurants.
 
+## Contents
+
 <!-- TOC -->
-* [Preparatory works](#preparatory-works)
-* [How to configure the dev version of the site](#how-to-configure-the-dev-version-of-the-site)
-* [How to update the database schema](#how-to-update-the-database-schema)
-* [How to run a prod-version in docker](#how-to-run-a-prod-version-in-docker)
-* [How to configure Rollbar](#how-to-configure-rollbar)
-* [How to run flake8](#how-to-run-flake8)
-* [Environment variables](#environment-variables)
-* [How to Deploy](#how-to-deploy)
+  * [Preparatory works](#preparatory-works)
+  * [How to configure the dev version of the site](#how-to-configure-the-dev-version-of-the-site)
+  * [How to update the database schema](#how-to-update-the-database-schema)
+  * [How to run a prod-version in docker](#how-to-run-a-prod-version-in-docker)
+  * [How to configure Rollbar](#how-to-configure-rollbar)
+  * [How to run flake8](#how-to-run-flake8)
+  * [Environment variables](#environment-variables)
+  * [How to Deploy](#how-to-deploy)
 <!-- TOC -->
 
 
