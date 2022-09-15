@@ -20,7 +20,8 @@ def save_order_to_db(validated_data):
                 cost=validated_product['quantity'] * validated_product['product'].price,
                 **validated_product,
             )
-            for validated_product in validated_products]
+            for validated_product in validated_products
+        ],
     )
 
     return order

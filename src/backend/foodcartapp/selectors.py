@@ -1,12 +1,28 @@
-from typing import Optional
+from typing import Iterator, NamedTuple
 
 from geopy import distance
 
-from location.models import Location
-from location.models import LocationCoords
+from foodcartapp.models import Order
+from foodcartapp.models import Restaurant
+from foodcartapp.models import RestaurantMenuItem
+from location.selectors import get_location_coords
 
 
-def get_restaurants_with_products_from_order(order, products_in_restaurants):
+class OrderCoords(NamedTuple):
+    lat: float
+    lon: float
+
+
+class RestaurantCoords(NamedTuple):
+    lat: float
+    lon: float
+
+
+def get_restaurants_with_products_from_order(
+    order: Order,
+    products_in_restaurants: Iterator[RestaurantMenuItem],
+):
+    """Get restaurants with products from order."""
     order_products = order.order_products.all()
     restaurants_with_products_from_order = []
 
@@ -15,76 +31,77 @@ def get_restaurants_with_products_from_order(order, products_in_restaurants):
             [
                 (
                     product_in_restaurants.restaurant,
-                    product_in_restaurants.restaurant_lat,
-                    product_in_restaurants.restaurant_lon,
+                    RestaurantCoords(
+                        lat=product_in_restaurants.restaurant_lat,
+                        lon=product_in_restaurants.restaurant_lon,
+                    ),
                 )
                 for product_in_restaurants in products_in_restaurants
                 if product_in_restaurants.product == order_product.product
             ],
         )
 
-    return calculate_distances_to_order(
+    return _calculate_distances_to_order(
         restaurants=set.intersection(*map(set, restaurants_with_products_from_order)),
-        order_address=order.address,
-        order_lat=order.lat,
-        order_lon=order.lon,
+        order=order,
+        order_location=OrderCoords(
+            lat=order.lat,
+            lon=order.lon,
+        ),
     )
 
 
-def get_location_coords(
-    address: str,
-    lat: Optional[float],
-    lon: Optional[float],
-) -> Optional[LocationCoords]:
-    if lat is not None and lon is not None:
-        return LocationCoords(lat=lat, lon=lon)
-
-    coords = Location.fetch_coordinates(address)
-    if coords is None:
-        return None
-
-    location, is_created = Location.objects.get_or_create(
-        address=address,
-        lat=coords.lat,
-        lon=coords.lon,
-    )
-    return LocationCoords(lat=location.lat, lon=location.lon)
+def _calculate_distance_between_restaurant_and_order(order_coords, restaurant_coords):
+    """Get distance between restaurant and order."""
+    if order_coords is None or restaurant_coords is None:
+        return 0
+    return distance.distance(  # noqa: WPS317
+        (order_coords.lat, order_coords.lon),
+        (restaurant_coords.lat, restaurant_coords.lon),
+    ).km
 
 
-def calculate_distances_to_order(
-    restaurants,
-    order_address: str,
-    order_lat: float,
-    order_lon: float,
+def _get_restaurant_with_order_distance(
+    order: Order,
+    restaurant: Restaurant,
+    order_location: OrderCoords,
+    restaurant_location: RestaurantCoords,
 ):
+    """Get restaurant with order distance."""
     order_coords = get_location_coords(
-        address=order_address,
-        lat=order_lat,
-        lon=order_lon,
+        address=order.address,
+        lat=order_location.lat,
+        lon=order_location.lon,
     )
 
-    restaurants_with_order_distance = []
+    restaurant_coords = get_location_coords(
+        address=restaurant.address,
+        lat=restaurant_location.lat,
+        lon=restaurant_location.lon,
+    )
+    distance_between_restaurant_and_order = _calculate_distance_between_restaurant_and_order(
+        order_coords=order_coords,
+        restaurant_coords=restaurant_coords,
+    )
+    return {
+        'restaurant': restaurant,
+        'order_distance': round(distance_between_restaurant_and_order, 2),
+    }
 
-    for restaurant, restaurant_lat, restaurant_lon in restaurants:
 
-        restaurant_coords = get_location_coords(
-            address=restaurant.address,
-            lat=restaurant_lat,
-            lon=restaurant_lon,
+def _calculate_distances_to_order(restaurants, order: Order, order_location: OrderCoords):
+    """Calculate distances to order."""
+    restaurants_with_order_distance = [
+        _get_restaurant_with_order_distance(
+            order=order,
+            order_location=order_location,
+            restaurant=restaurant,
+            restaurant_location=restaurant_location,
         )
+        for restaurant, restaurant_location in restaurants
+    ]
 
-        if order_coords is None or restaurant_coords is None:
-            distance_between_restaurant_and_order = 0
-        else:
-            distance_between_restaurant_and_order = distance.distance(
-                (order_coords.lat, order_coords.lon),
-                (restaurant_coords.lat, restaurant_coords.lon),
-            ).km
-
-        restaurants_with_order_distance.append(
-            {
-                'restaurant': restaurant,
-                'order_distance': round(distance_between_restaurant_and_order, 2),
-            },
-        )
-    return sorted(restaurants_with_order_distance, key=lambda restaurant: restaurant['order_distance'])
+    return sorted(
+        restaurants_with_order_distance,
+        key=lambda restaurant: restaurant['order_distance'],  # noqa: WPS440, WPS441
+    )
