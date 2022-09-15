@@ -22,3 +22,5 @@ per-file-ignores =
   */serializers.py: WPS306, D101,
   */selectors.py: WPS306, D101,
   */admin.py: WPS110, D102, D101, WPS431, WPS306,
+  */migrations/*.py: WPS102, I001, I005, WPS301, D101, WPS432
+  */models.py: WPS432, WPS110, WPS306, D105, WPS602, WPS210, WPS221, WPS219
