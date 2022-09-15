@@ -15,7 +15,5 @@ exclude_patterns:
   - "**__pycache__**"
 
 plugins:
-  pep8:
-    enabled: true
   duplication:
     enabled: true
