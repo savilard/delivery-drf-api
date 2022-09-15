@@ -1,0 +1,21 @@
+version: "2"
+
+checks:
+  argument-count:
+    config:
+      threshold: 5 #Allow at most 5 arguments in a function
+  method-count:
+    config:
+      threshold: 25 #Allow at most 25 functions in a class
+
+exclude_patterns:
+  - "src/frontend/"
+  - "src/backend/*/migrations/**"
+  - "src/backend/config/**"
+  - "**__pycache__**"
+
+plugins:
+  pep8:
+    enabled: true
+  duplication:
+    enabled: true
