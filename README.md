@@ -1,6 +1,6 @@
-# Сайт доставки еды Star Burger
+# Star Burger food delivery website
 
-Это сайт сети ресторанов Star Burger. Здесь можно заказать превосходные бургеры с доставкой на дом.
+This is the website of the Star Burger restaurant chain. Here you can order excellent burgers with home delivery.
 
 ![скриншот сайта](https://dvmn.org/filer/canonical/1594651635/686/)
 
@@ -13,101 +13,99 @@
 [![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg?style=for-the-badge)](https://github.com/wemake-services/wemake-python-styleguide)
 
 
-Сеть Star Burger объединяет несколько ресторанов, действующих под единой франшизой. У всех ресторанов одинаковое меню и одинаковые цены. Просто выберите блюдо из меню на сайте и укажите место доставки. Мы сами найдём ближайший к вам ресторан, всё приготовим и привезём.
+The Star Burger chain consists of several restaurants operating under a single franchise. All restaurants have the same menu and the same prices. Just choose a dish from the menu on the site and specify the place of delivery. We will find the nearest restaurant to you, prepare everything and bring it to you.
 
-На сайте есть три независимых интерфейса. Первый — это публичная часть, где можно выбрать блюда из меню, и быстро оформить заказ без регистрации и SMS.
+The site has three independent interfaces. The first is the public part, where you can select dishes from the menu and quickly place an order without registration and SMS.
 
-Второй интерфейс предназначен для менеджера. Здесь происходит обработка заказов. Менеджер видит поступившие новые заказы и первым делом созванивается с клиентом, чтобы подтвердить заказ. После оператор выбирает ближайший ресторан и передаёт туда заказ на исполнение. Там всё приготовят и сами доставят еду клиенту.
+The second interface is designed for the manager. This is where the processing of orders takes place. The manager sees new orders and first of all calls the client to confirm the order. After that, the operator chooses the nearest restaurant and passes the order for execution there. There everything is prepared and the food is delivered to the client.
 
-Третий интерфейс — это админка. Преимущественно им пользуются программисты при разработке сайта. Также сюда заходит менеджер, чтобы обновить меню ресторанов Star Burger.
+The third interface - this is the admin panel. It is mainly used by programmers when developing the site. The manager also comes here to update the menu of Star Burger restaurants.
 
-## Подготовительные работы:
-1. Установите [docker](https://docs.docker.com/get-docker/) и [docker compose v2](https://docs.docker.com/compose/cli-command/#installing-compose-v2);
-2. Скачайте код:
+## Preparatory works:
+1. Setup [docker](https://docs.docker.com/get-docker/) and [docker compose v2](https://docs.docker.com/compose/cli-command/#installing-compose-v2);
+2. Download the code:
 ```shell
 git clone https://github.com/savilard/delivery-drf-api.git
 ```
-3. Перейдите в каталог проекта:
+3. Go to the project directory:
 ```shell
 cd  delivery-drf-api
 ```
 
-## Как настроить dev-версию
-1. Для настройки dev версии сайта выполните команду:
+## How to configure the dev version of the site
+1. To configure the dev version of the site run the command:
 ```shell
 ./scripts/setup.sh
 ```
-В результате работы скрипта:
-- БД наполнится тестовыми данными;
-- выполнятся миграции;
-- будет создан superuser и логином `superuser` и паролем `superpassword` (или теми, которые будут заданы в переменные окружения `DJANGO_SUPERUSER_USERNAME` и `DJANGO_SUPERUSER_PASSWORD`).
-
-2. Запустите docker контейнеры:
+As a result of the script:
+- The database will be filled with test data;
+- will create a superuser with login `superuser` and password `superpassword` (or the ones set in the environment variables `DJANGO_SUPERUSER_USERNAME` and `DJANGO_SUPERUSER_PASSWORD`).
+2. Start the docker containers:
 ```shell
 docker compose up
 ```
 
-Сайт будет доступен по адресу [127.0.0.1:8080](http://127.0.0.1:8080). Вход в админку по адресу [http://127.0.0.1:8080/admin/](http://127.0.0.1:8080/admin/). Список заказов - по адресу [http://127.0.0.1:8080/manager/orders/](http://127.0.0.1:8080/manager/orders/)
+The site will be available at [127.0.0.1:8080](http://127.0.0.1:8080). Login to the admin area at [http://127.0.0.1:8080/admin/](http://127.0.0.1:8080/admin/). Order list at [http://127.0.0.1:8080/manager/orders/](http://127.0.0.1:8080/manager/orders/)
 
-Для тонкой настройки сайта используйте переменные окружения, как это принято с Docker Compose. Список доступных переменных можно найти внутри файла `docker-compose.yml`.
+To fine-tune the site, use environment variables, as is common with Docker Compose. A list of available variables can be found inside the `docker-compose.yml` file.
 
 
-## Как накатить свежие миграции
-1. Запустите docker контейнеры (если они не запущены):
+## How to update the database schema
+1. Start the docker containers (if they are not running):
 ```shell
 docker compose up --build
 ```
-2. В новой вкладке терминале не выключая сайт выполните команду:
+2. In a new terminal tab, without shutting down the site, run the command:
 ```shell
 docker-compose run --rm backend ./manage.py migrate
 ```
 
-## Как запустить prod-версию в docker
-1. Настройте ssl сертификат с помощью [certbot](https://certbot.eff.org/);
-2. Переименуйте файл nginx.conf.example в nginx.conf;
-3. Замените example.com на адрес своего сайта, example_ip на ip хостинга;
-4. Выполните команду:
+## How to run a prod-version in docker
+1. Configure the ssl certificate with [certbot](https://certbot.eff.org/);
+2. Rename the nginx.conf.example file to nginx.conf;
+3. Replace example.com with the address of your site, example_ip with the hosting ip;
+4. Run the command:
 ```bash
 make docker-prod
 ```
 
 
-## Как настроить Rollbar
+## How to configure Rollbar
 
-1. Зарегистрируйтесь в [Rollbar](https://rollbar.com/);
-2. Когда речь зайдёт о SDK, выбирайте Django;
-3. В `.env` файл добавьте:
-- `ROLLBAR_ACCESS_TOKEN` - токен для доступа к Rollbar,
-- `ROLLBAR_ENVIRONMENT` - название окружения.
+1. Sign up at [Rollbar](https://rollbar.com/);
+2. When it comes to SDKs, choose Django;
+3. In the `.env` file add:
+- `ROLLBAR_ACCESS_TOKEN` - token to access Rollbar;
+- `ROLLBAR_ENVIRONMENT` - environment name.
 
 
-## Как запустить flake8:
+## How to run flake8:
 ```shell
 docker compose run --rm backend sh -c "flake8"
 ```
 
 
-## Переменные окружения
-`SECRET_KEY` -- обязательная секретная настройка Django. Это соль для генерации хэшей. Значение может быть любым, важно лишь, чтобы оно никому не было известно. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#secret-key).
+## Environment variables
+`SECRET_KEY` is Django's mandatory secret setting. This is salt for hash generation. The value can be anything, as long as it is not known to anyone. [Django documentation](https://docs.djangoproject.com/en/3.2/ref/settings/#secret-key).
 
-`DEBUG` -- настройка Django для включения отладочного режима. Принимает значения `TRUE` или `FALSE`. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-DEBUG).
+`DEBUG` -- Django setting to enable debug mode. Accepts `TRUE` or `FALSE`. [Django documentation](https://docs.djangoproject.com/en/3.2/ref/settings/#std:setting-DEBUG).
 
-`ALLOWED_HOSTS` -- настройка Django со списком разрешённых адресов. Если запрос прилетит на другой адрес, то сайт ответит ошибкой 400. Можно перечислить несколько адресов через запятую, например `127.0.0.1,192.168.0.1,site.test`. [Документация Django](https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts).
+`ALLOWED_HOSTS` -- a Django setting with a list of allowed addresses. If the request arrives at a different address, the site will respond with a 400 error. You can list multiple addresses separated by commas, such as `127.0.0.1,192.168.0.1,site.test`. [Django documentation](https://docs.djangoproject.com/en/3.2/ref/settings/#allowed-hosts).
 
-`DATABASE_URL` -- адрес для подключения к базе данных PostgreSQL. Другие СУБД сайт не поддерживает. [Формат записи](https://github.com/jacobian/dj-database-url#url-schema).
+`DATABASE_URL` -- the address to connect to a PostgreSQL database. Other DBMS site does not support. [Record format](https://github.com/jacobian/dj-database-url#url-schema).
 
-`POSTGRES_PASSWORD` -- пароль от postgresql.
+`POSTGRES_PASSWORD` -- password from postgresql.
 
-`YANDEX_GEOCODER_APIKEY` - API ключ от Яндекс-геокодера. Получаем [тут](https://developer.tech.yandex.ru/).
+`YANDEX_GEOCODER_APIKEY` -- API key from Yandex geocoder. Get it [here](https://developer.tech.yandex.ru/).
 
-`DJANGO_SUPERUSER_USERNAME` - username учетной записи суперпользователя..
+`DJANGO_SUPERUSER_USERNAME` -- username of the superuser account.
 
-`DJANGO_SUPERUSER_EMAIL` - email учетной записи суперпользователя.
+`DANGO_SUPERUSER_EMAIL` -- email of the superuser account.
 
-`DJANGO_SUPERUSER_PASSWORD` - пароль учетной записи суперпользователя.
+`DANGO_SUPERUSER_PASSWORD` -- password for the superuser account.
 
 
-## Как деплоить
+## How to Deploy
 ```shell
 ./deploy.sh
 ```
