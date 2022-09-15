@@ -1,7 +1,7 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render
 
-from core.helpers import is_manager
+from core.check_user import is_manager
 from foodcartapp.models import Product
 from foodcartapp.models import Restaurant
 
