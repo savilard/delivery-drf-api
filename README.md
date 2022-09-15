@@ -21,7 +21,19 @@ The second interface is designed for the manager. This is where the processing o
 
 The third interface - this is the admin panel. It is mainly used by programmers when developing the site. The manager also comes here to update the menu of Star Burger restaurants.
 
-## Preparatory works:
+<!-- TOC -->
+* [Preparatory works](#preparatory-works)
+* [How to configure the dev version of the site](#how-to-configure-the-dev-version-of-the-site)
+* [How to update the database schema](#how-to-update-the-database-schema)
+* [How to run a prod-version in docker](#how-to-run-a-prod-version-in-docker)
+* [How to configure Rollbar](#how-to-configure-rollbar)
+* [How to run flake8](#how-to-run-flake8)
+* [Environment variables](#environment-variables)
+* [How to Deploy](#how-to-deploy)
+<!-- TOC -->
+
+
+## Preparatory works
 1. Setup [docker](https://docs.docker.com/get-docker/) and [docker compose v2](https://docs.docker.com/compose/cli-command/#installing-compose-v2);
 2. Download the code:
 ```shell
@@ -79,7 +91,7 @@ make docker-prod
 - `ROLLBAR_ENVIRONMENT` - environment name.
 
 
-## How to run flake8:
+## How to run flake8
 ```shell
 docker compose run --rm backend sh -c "flake8"
 ```
